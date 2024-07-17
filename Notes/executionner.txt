@@ -1,0 +1,4 @@
+this is a function where i just check the group of each token of each family.
+it cycles through each family
+		and it also cycles through each token inside the family if it finds a COMMAND group token it calls the which_command. 
+		    The which_command fucntion which is just an if else condition to call for the convenient builtin function

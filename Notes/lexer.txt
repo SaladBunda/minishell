@@ -1,0 +1,56 @@
+/*
+		LEXER
+		Types that the lexer would try to define
+	2		=>  Strings
+	4		=>  Variables : Anything that starts with a $ sign
+			=> Symbol types
+				->  Command chaining and control
+					&&  Logical AND : Executes the next command only uf the previous one succeds
+					||  Logical OR : Executes the next command only if the previous command fails
+				->  Redirection
+	3				>  Redirects output to a file
+	9				>> Redirects output to a file
+	15				<  Redirects input from a file
+	21				<< heredoc
+				-> Pipes
+					|  Pipe operator. Passes the output of one command as input to another
+				-> Subshells & Grouping
+					(command1; command2) Subshell Executes commands in a subshell
+				-> Command Substitution
+					1.    e.g:  result="command" ---- Replacing command with its output
+					2.    e.g:  result=$(command) ---- Replacing command with its output
+				-> Quoting
+					" double quotes Preserves literal value of most characters
+					inside the quotes but allows variable and command substitution
+						e.g : echo "This is $variable" (Variable will be expanded)
+					' single quote Preserves the literal value of all characters inside
+					the quotes
+						e.g : echo "This is $variable" (Variable won't be expanded)
+	8		=> Wildcards (Globbing)
+					* : Mathches any number of characters
+
+		goal in lexer is to categorize defferent tokens or command
+		elements in a minishell implementation using integer
+		constants
+
+		We'll group the tokens into three categories cause the logic for each token
+		will be different for each of these tokens
+		The tokens that share the same charasteristics in terms of
+		parsing will be distinguishby whether their value
+		is divisible by 3 , 2 or none
+		==> Those that are divisible by 2 :
+			Strings - Variables - Wildcards
+		==> Those that are divisible by 3 :
+			<< < > >> heredoc less great append
+		==> Those that are divisible by none :
+			The remaining tokens must have values that
+			arent divisble by 3 nor by 5
+	On this basis we'll be able to identify each token
+	and manage the way this token should be parsed later on in
+	our program
+
+	The idea at first is to create a linked list containing all
+	the Tokens with their corresponding type before Expanding
+	and dividing the tokens based on && and || operator
+
+*/

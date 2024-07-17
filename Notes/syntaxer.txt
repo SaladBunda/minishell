@@ -1,0 +1,2 @@
+in the syntax.c file i just check if some rules are respected like if we have a > there must be a filename after it aka the next node must be either STR or VAR or DQUOTE or SQUOTE if there is a space we skip it
+we do the same thing for the pipe just this time it ok to have > and < or << >>, we cant have another pipe or E_CMD after it or newline etc

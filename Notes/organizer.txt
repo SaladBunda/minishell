@@ -1,0 +1,18 @@
+in the organnizer function i try to sort my token into 4 kinds:
+it either a command: that will be executed, primarly there is 1 command per family. Group name: COMMAND : 102
+it either a parameter: can be many parameters will be passed to the command, in execve after finishing parsing . Group name: PARAM: 103
+it either an operator: (>>, >, <) heredoc is a little complicated, but anytime i find one of the operator i set its group as OP. Group name: OP 104
+it either a filename: it can be a filename when the preceding token is an operator (>> < >). Group name: FILENAME: 101
+
+it works like this:
+cycles through each family
+		sets a flag to 0 for each family
+				cycles through each token inside the family
+						if the flag is still set to 0 it checkes if the token is of type STR, VAR, DQUOTE, SQUOTE
+								if true it sets the token group to COMMAND and sets the flag to 1 or just increments it
+										everything else is set to PARAM
+								after setting everytign to either a PARAM or COMMAND we now check if the current token of type operator 
+									if so we set the token's group to OP
+										after that so we check the one after it (we skip spaces) if it is of type STR or VAR or DQUOTE or SQUOTE
+												if so we set that token to type FILENAME
+we keep cycling for each family and each token

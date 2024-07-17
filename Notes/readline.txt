@@ -1,0 +1,9 @@
+readline:
+	Reads a line of text from the user's terminal providing editing capabilities
+	like row keys history navigation and deletion
+	including <readline/readline.h> and linking the program with the readline library -lreadline
+	
+rl_clear_history,
+rl_on_new_line,
+rl_replace_line,
+rl_redisplay

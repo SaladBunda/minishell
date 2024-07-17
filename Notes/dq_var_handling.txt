@@ -1,0 +1,25 @@
+worked on checkign if a node is a double string node, if so i get inside the dq_var.
+in the dq_var i go character by character untili find a dollar sign when i do i check if there is a valid variable name after.
+if so i get inside the search_replace which search for the var name inside the env linked list, if i find it return the result of the variable and pass it to var_value;
+after that i pass the var_value and all the indexes used by adress also the token
+inside hte substitution i get calculate the new size of the token->value and malloc it after that i copy from the old token->value to the string mallocated and then copy the var value and after i copy the rest of the token->value after calculate the rest
+and then i update the index so that in the dq_var it continues from where the substitution of the variable ended
+ex:
+command: "bunda $bunda $nabil"
+first it will copy "bunda"
+after that it will replace bunda with 3 (inside path)
+after that it i will copy the rest of command beginning from after the furst variable name in this example after the 'a'
+currently the node value is :"bunda 3 $nabil"
+the index will be update after the 3 which is the space
+the loop will restart 
+
+
+
+"ahwdahjbw $bunda $anwkdnajkw"
+ahwdahjbw
+ahwdahjbw 3
+ahwdahjbw 3 $anwkdnajkw
+
+ahwdahjbw 3 \0
+
+

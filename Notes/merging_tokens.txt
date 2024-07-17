@@ -1,0 +1,4 @@
+we gonna merge tokens if the current node is of type
+(STR || VAR || DQUOTE || SQUOTE)
+and the next node is of type
+(STR || VAR || DQUOTE || SQUOTE)

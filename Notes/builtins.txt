@@ -1,0 +1,51 @@
+most of the built in functions would take t_family node as their parameters
+1. echo with option -n
+
+-n option prevents the newline from being printed
+
+argument passed :
+Family node of type CMD_ROW
+family->start->value should be "echo"
+
+everything going from start node until end
+the goal is to take all nodes going from start to end
+the tokens ill go through should be of the fllowing types:
+-> DQUOTE would be already expanded
+-> SQUOTE & STR should simply display their value
+-> Consecutive -n arguments should be skipped and not printed
+
+2. pwd
+
+syscall required: getcwd
+-> Unix syscall gets the current working directory of the file system
+takes two parameters a buffer and an integer representing the size of the buffer
+-> stores the absolute pathname of the current working directory in the buffer
+-> If length of the current working directory including the terminating null-byte exeeds size bytes
+NULL is returned errno is set to ERANGE
+Family node of type CMD_ROW
+
+4. env/export
+Both of these builtins can read from the same env linked list but they are diffrent
+mainly because of the way they display information
+env : `VARNAME=VALUE`   export : `declare -x VARNAME="VALUE"`
+
+!!! export can take multiple arguments
+
+Argument that are of the correct format (start with an underscore or an alphabetic)
+
+with env youll only display the variables that have a value
+export should display all the variables regarles
+whether they have a value or dont
+
+export_builtin function would check if there is a following node of type
+if the command has an equal sign and starts 
+
+
+
+3. cd
+
+syscall required: chdir
+->chdir takes a parameter, a char * with the name of the path, of directory to enter
+->chdir returns 0 if the directory or path exists, and -1 if it doesnt.
+->cd also changes in the env variables PWD and OLDPWD
+we can use getcwd to get current working directory after cding inside it then we update it in the env linked list
