@@ -6,7 +6,7 @@
 /*   By: ael-maaz <ael-maaz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/15 15:04:57 by ael-maaz          #+#    #+#             */
-/*   Updated: 2024/07/16 15:54:39 by ael-maaz         ###   ########.fr       */
+/*   Updated: 2024/07/19 12:32:19 by ael-maaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,32 @@ void	last_io(t_family *cmd_row)
 		cmd_row->last_outfile = ft_strdup(outfile);
 }
 
+void fill_files_array(t_family *family, t_token *start, t_token *end, int *i)
+{
+	int type;
+	while(start != end)
+	{
+		if(start->next && (start->type == HEREDOC || start->type == APPEND || start->type == GREAT || start->type == LESS))
+		{
+			type = start->type;
+			start = start->next;
+			if(start->next && start->type == SPACE)
+				start = start->next;
+			if(start != end)
+			{
+				family->files[*i].path=ft_strdup(start->value);
+				family->files[*i].type = type;
+				family->files[*i].is_var = start->type;
+				(*i)++;
+			}
+		}
+		if(start->next->type != E_CMD || start->next != end)
+			start = start->next;
+		else 
+			break;
+	}
+}
+
 
 void	extract_files(t_family *family_ll)
 {
@@ -58,37 +84,16 @@ void	extract_files(t_family *family_ll)
 	ittr_node = family_ll->next;
 	t_token *tmp;
 	int i;
-	int type;
 	
 	while (ittr_node->type != E_CMD)
 	{
 		if (ittr_node->type == CMD_ROW)
 		{
-			file_count = 0;
 			file_count = count_files(ittr_node);
 			ittr_node->files = malloc((file_count + 1) * sizeof(t_files));
 			tmp = ittr_node->start;
 			i = 0;
-			while(tmp != ittr_node->end->next)
-			{
-				if(tmp->next && (tmp->type == HEREDOC || tmp->type == APPEND || tmp->type == GREAT || tmp->type == LESS))
-				{
-					type = tmp->type;
-					tmp = tmp->next;
-					if(tmp->next && tmp->type == SPACE)
-						tmp = tmp->next;
-					if(tmp != ittr_node->end->next)
-					{
-						ittr_node->files[i].path=ft_strdup(tmp->value);
-						ittr_node->files[i].type = type;
-						i++;
-					}
-				}
-				if(tmp->next->type != E_CMD || tmp->next != ittr_node->end->next)
-					tmp = tmp->next;
-				else 
-					break;
-			}
+			fill_files_array(ittr_node,tmp,ittr_node->end->next,&i);
 			ittr_node->files[i].path = NULL;
 			last_io(ittr_node);
 		}

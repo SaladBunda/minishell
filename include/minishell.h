@@ -6,7 +6,7 @@
 /*   By: ael-maaz <ael-maaz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 20:33:02 by nhayoun           #+#    #+#             */
-/*   Updated: 2024/07/16 10:02:27 by ael-maaz         ###   ########.fr       */
+/*   Updated: 2024/07/19 15:24:13 by ael-maaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,7 @@ typedef struct s_files
 	char	*path;
 	int		type;
 	int		fd;
+	int		is_var;
 }	t_files;
 
 typedef struct s_family
@@ -98,10 +99,6 @@ typedef struct s_family
 	int						level;
 	int						index;
 	t_files					*files;
-	char					**in_files;
-	char					**out_files;
-	char                    **here_docs;
-	char                    **appends;
 	char					**args;
 	char					*cmd_path;
 	char                    *last_infile;

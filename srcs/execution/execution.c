@@ -6,81 +6,64 @@
 /*   By: ael-maaz <ael-maaz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 20:32:35 by nhayoun           #+#    #+#             */
-/*   Updated: 2024/07/17 17:01:09 by ael-maaz         ###   ########.fr       */
+/*   Updated: 2024/07/19 14:32:27 by ael-maaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-void single_command(t_family *family, t_token *env)
+
+int test_var_file(t_files file)
 {
-	t_family *tmp;
-	tmp = family->next;
-	int fork_id;
-    fork_id = fork();
-    if(fork_id == -1)
-        return ;
-    if(fork_id == 0)
-    {
-        int infile = -1;
-        int outfile = -1;
-        if(tmp->out_files)
-        {
-            outfile = open(tmp->out_files[0], O_CREAT | O_TRUNC | O_WRONLY, 0666);
-            if(outfile > 0)
-                dup2(outfile, STDOUT_FILENO);
-            else
-            {
-                perror("outfile");
-                exit(1);
-            }
-        }
-        if(tmp->in_files)
-        {
-            infile = open(tmp->in_files[0], O_RDONLY);
-            if(infile > 0)
-                dup2(infile, STDIN_FILENO);
-            else
-            {
-                perror("infile");
-                exit(1);
-            }
-        }
-        if(outfile > 0)
-            dup2(outfile, STDOUT_FILENO);
-		if(fake_executionner(family, env) == 0)
-			return ;
-		(void)env;
-		char **env_arr = env_decompose(env);
-        ft_putstr_fd("Execution\n", 1);
-		if(!tmp->cmd_path)
-			exit(0);
-		printf("%d\n",execve(tmp->cmd_path, tmp->args, env_arr));
-		perror("execve:");
-    }
-    wait(NULL);
+	int i;
+	i = 0;
+	if(file.is_var == 4)
+	{
+		while(file.path[i] && is_whitespace(file.path[i]) == 1)
+			i++;
+		if(file.path[i] == '\0')
+			return 1;
+		else
+		{
+			while(file.path[i] && is_whitespace(file.path[i]) == 0)
+				i++;
+			while(file.path[i] && is_whitespace(file.path[i]) == 1)
+				i++;
+			if(file.path[i] == '\0')
+				return (0);
+			else if(is_whitespace(file.path[i]) == 0)
+				return (1);
+		}
+	}
+	return 0;
 }
 
 void handle_fds(t_family *head)
 {
-	int i = 0;
+	int i = -1;
 	t_family *tmp;
 	tmp = head;
-	while(tmp->files[i].path)
+	while(tmp->files[++i].path)
 	{
-		if(tmp->files[i].type == APPEND)
-			tmp->files[i].fd = open(tmp->files[i].path, O_CREAT | O_APPEND | O_WRONLY, 0644);
-		if(tmp->files[i].type == LESS)
-			tmp->files[i].fd = open(tmp->files[i].path, O_RDONLY);
-		if(tmp->files[i].type == GREAT)
-			tmp->files[i].fd = open(tmp->files[i].path, O_CREAT | O_TRUNC | O_WRONLY, 0644);
-		if(tmp->files[i].fd < 0)
+		if(test_var_file(tmp->files[i]) == 0)
 		{
-			perror("minishell");
+			if(tmp->files[i].type == APPEND)
+				tmp->files[i].fd = open(tmp->files[i].path, O_CREAT | O_APPEND | O_WRONLY, 0644);
+			if(tmp->files[i].type == LESS)
+				tmp->files[i].fd = open(tmp->files[i].path, O_RDONLY);
+			if(tmp->files[i].type == GREAT)
+				tmp->files[i].fd = open(tmp->files[i].path, O_CREAT | O_TRUNC | O_WRONLY, 0644);
+			if(tmp->files[i].fd < 0)
+			{
+				perror("minishell_fd");
+				exit(1);
+			}
+		}
+		else
+		{
+			printf("ambiguious redirect\n");
 			exit(1);
 		}
-		printf("fd of %s:%d\n",tmp->files[i].path,tmp->files[i].fd);
-		i++;
 	}
 }
 
@@ -151,6 +134,91 @@ void handle_heredocs(t_family *head)
 	}
 }
 
+void single_command(t_family *family, t_token *env, int i, int fork_id)
+{
+	t_family *tmp;
+
+	tmp = family->next;
+	handle_heredocs(tmp);
+    fork_id = fork();
+    if(fork_id == -1)
+        return ;
+    if(fork_id == 0)
+    {
+		handle_fds(tmp);
+		i = -1;
+		while(tmp->files[++i].path)
+		{
+			if(tmp->last_infile && ft_fcmp(tmp->files[i].path, tmp->last_infile) == 0)
+				dup2(tmp->files[i].fd,STDIN_FILENO);
+			if(tmp->last_outfile && ft_fcmp(tmp->files[i].path, tmp->last_outfile) == 0)
+				dup2(tmp->files[i].fd,STDOUT_FILENO);
+		}
+		if (fake_executionner(family, env) == 0)
+			return ;
+		char **env_arr = env_decompose(env);
+		printf("%d\n",execve(tmp->cmd_path, tmp->args, env_arr));
+		perror("execve:");
+    }
+    wait(NULL);
+}
+
+
+// void    execution(t_family *head, t_token *env)
+// {
+// 	int i = 0;
+
+// 	t_family *tmp;
+//     tmp = head->next;
+// 	while(tmp->type != E_CMD)
+// 	{
+// 		if(tmp->type == CMD_ROW)
+// 			i++;
+// 		tmp = tmp->next;
+// 	}
+// 	tmp = head->next;
+// 	if (i == 1)
+// 	{
+// 		single_command(head, env);
+// 		return ;
+// 	}
+// 	handle_heredocs(tmp);
+// 	i = 0;
+// 	int fork_id;
+// 	while()
+// 	{
+// 		fork_id = fork();
+// 		if(fork_id == -1)
+// 			return ;
+// 		if(fork_id == 0)
+// 		{
+// 			handle_fds(tmp);
+// 			i = 0;
+// 			while(tmp->files[i].path)
+// 			{
+// 				if(tmp->last_infile && ft_fcmp(tmp->files[i].path, tmp->last_infile) == 0)
+// 					dup2(tmp->files[i].fd,STDIN_FILENO);
+// 				if(tmp->last_outfile && ft_fcmp(tmp->files[i].path, tmp->last_outfile) == 0)
+// 					dup2(tmp->files[i].fd,STDOUT_FILENO);
+// 				i++;
+// 			}
+// 			char **env_arr = env_decompose(env);
+// 			ft_putstr_fd("Execution\n", 2);
+// 			if(fake_executionner(tmp, env) == 0)
+// 				return ;
+// 			if(!tmp->cmd_path)
+// 				exit(0);
+// 			printf("%d\n",execve(tmp->cmd_path, tmp->args, env_arr));
+// 			perror("execve");
+// 		}
+		
+// 	}
+//     wait(NULL);
+
+// }
+
+
+
 void    execution(t_family *head, t_token *env)
 {
 	int i = 0;
@@ -166,7 +234,7 @@ void    execution(t_family *head, t_token *env)
 	tmp = head->next;
 	if (i == 1)
 	{
-		single_command(head, env);
+		single_command(head, env, -1, 0);
 		return ;
 	}
 	handle_heredocs(tmp);
@@ -190,8 +258,16 @@ void    execution(t_family *head, t_token *env)
         ft_putstr_fd("Execution\n", 2);
 		if(fake_executionner(tmp, env) == 0)
 			return ;
-		if(!tmp->cmd_path)
+		if(!tmp->cmd_path && !tmp->args)
+		{
+			printf("inside if condition\n");
 			exit(0);
+		}
+		else if (!tmp->cmd_path && tmp->args[0])
+		{
+			printf("minishell: %s: command not found\n",tmp->args[0]);
+			exit(1);
+		}
         printf("%d\n",execve(tmp->cmd_path, tmp->args, env_arr));
         perror("execve");
     }

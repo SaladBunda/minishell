@@ -6,7 +6,7 @@
 /*   By: ael-maaz <ael-maaz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 16:17:39 by ael-maaz          #+#    #+#             */
-/*   Updated: 2024/07/16 14:54:51 by ael-maaz         ###   ########.fr       */
+/*   Updated: 2024/07/19 12:36:23 by ael-maaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,14 +100,14 @@ void treat_path(t_family *token, t_token *env)
 	while(path_array[++i])
 	{
 		joined = ft_strjoin_cmd(path_array[i], tmp);
-		
 		if(access(joined, R_OK) == 0)
 		{
 			token->cmd_path = joined;
-			break;
+			return ;
 		}
 		free(joined);
 	}
+	token->cmd_path = NULL;
 }
 
 void	extract_paths(t_family *head, t_token *env)

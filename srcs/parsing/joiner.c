@@ -6,7 +6,7 @@
 /*   By: ael-maaz <ael-maaz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/02 11:56:22 by ael-maaz          #+#    #+#             */
-/*   Updated: 2024/07/14 11:41:09 by ael-maaz         ###   ########.fr       */
+/*   Updated: 2024/07/19 14:54:49 by ael-maaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,7 @@ char	*value_merger(t_token *ptr, int to_merge)
 	return (new_value);
 }
 
-t_token	*nodes_detash(t_token *ptr, int to_detash)
+t_token	*nodes_detash(t_token *ptr, int to_detash, int flag)
 {
 	int		i;
 	t_token	*detash_start;
@@ -124,7 +124,7 @@ t_token	*nodes_detash(t_token *ptr, int to_detash)
 
 	detash_end = NULL;
 	i = 0;
-	new_node = new_token(value_merger(ptr, to_detash), STR);
+	new_node = new_token(value_merger(ptr, to_detash), flag);
 	detash_start = ptr->prev;
 	tmp = detash_start->next;
 	while (i < to_detash)
@@ -147,7 +147,9 @@ void	token_merger(t_token *head)
 	int		i;
 	t_token	*tmp;
 	t_token	*tmp2;
+	int flag;
 
+	flag = STR;
 	tmp = head->next;
 	while (tmp)
 	{
@@ -156,13 +158,13 @@ void	token_merger(t_token *head)
 		while (type_returner(tmp) == 0 && tmp->next != NULL
 			&& type_returner(tmp->next) == 0)
 		{
+			if(tmp->type == VAR)
+				flag = VAR;
 			tmp = tmp->next;
 			i++;
 		}
 		if (i > 0)
-		{
-			tmp = nodes_detash(tmp2, i);
-		}
+			tmp = nodes_detash(tmp2, i, flag);
 		else
 			tmp = tmp->next;
 	}

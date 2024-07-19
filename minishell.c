@@ -6,12 +6,13 @@
 /*   By: ael-maaz <ael-maaz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 20:32:39 by nhayoun           #+#    #+#             */
-/*   Updated: 2024/07/15 10:30:20 by ael-maaz         ###   ########.fr       */
+/*   Updated: 2024/07/19 12:56:19 by ael-maaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 
 //ALERT: NEWS: IF THE VARIABLE IS NOT FOUND IT IS SUPPOSED TO GET DELETED FROM THE LINKED LIST AND NOT REPLACED WITH EMPTY STRING!!!!!!!!!!!!!
+
 
 #include "./include/minishell.h"
 
@@ -27,6 +28,16 @@ void		print_env(t_token *env_head)
 		token = token->next;
 	}
 }
+int check_empty(char *str)
+{
+	int i = 0;
+	while(str[i] && is_whitespace(str[i]) == 1)
+		i++;
+	if(str[i] == '\0')
+		return 1;
+	return 0;
+	
+}
 
 int	main(int ac, char **av, char **env)
 {
@@ -41,6 +52,14 @@ int	main(int ac, char **av, char **env)
 	tail = list_tail(env_ll);
 	while ((cmd = readline("minishell$> ")) != NULL)
 	{
+		if (check_empty(cmd) == 1)
+		{
+			free(cmd);
+			continue ;
+		}
+			
+			
+			
 		add_history(cmd);
 
 		family_head = parsing(cmd, env_ll);

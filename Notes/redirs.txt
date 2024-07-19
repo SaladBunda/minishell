@@ -1,0 +1,12 @@
+in the redirs_bunda file, i have the function extract_files which is called inside the parsing function
+-->in the extract_files, i iterate over every family
+	-->inside the family of type CMD_ROW (i skip pipe families) i count how many files are there using count_files() function
+		-->the count_files function iterate over every token inside the family and checks if it is of group FILE_NAME (defined in headerfile as 101) and increments the count
+		-->after counting how many files i mallocate (n+1) of type t_files number to the files member which is an array of type t_files;
+			typedef struct s_files
+			{
+				char *path; is the name of the file or path of it ex: (bunda) (./bunda) (../bunda) (./bunda/nabil) etc
+				int fd; for each file it will be opened and its file descritor saved for later use
+				int type;	type it will be either a APPEND or LESS or GREAT or HEREDOC will be needed for later use
+				int is_var;
+			}
