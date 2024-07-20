@@ -3,22 +3,22 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-maaz <ael-maaz@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: nhayoun <nhayoun@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 20:33:02 by nhayoun           #+#    #+#             */
-/*   Updated: 2024/07/19 15:24:13 by ael-maaz         ###   ########.fr       */
+/*   Updated: 2024/07/19 18:55:07 by nhayoun          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 # include "../libft/libft.h"
+# include <fcntl.h>
 # include <readline/history.h>
 # include <readline/readline.h>
 # include <stdio.h>
 # include <stdlib.h>
-#include <unistd.h>
-# include <fcntl.h>
+# include <unistd.h>
 
 # define CMD_ROW 100
 # define AND_ROW 200
@@ -80,14 +80,13 @@ typedef struct s_group
 	t_command				*tail;
 }							t_group;
 
-
 typedef struct s_files
 {
-	char	*path;
-	int		type;
-	int		fd;
-	int		is_var;
-}	t_files;
+	char					*path;
+	int						type;
+	int						fd;
+	int						is_var;
+}							t_files;
 
 typedef struct s_family
 {
@@ -95,15 +94,18 @@ typedef struct s_family
 	t_family				*prev;
 	t_token					*start;
 	t_token					*end;
+	t_files					*files;
+	int						in;
+	int						out;
+	int						prev_fd;
 	int						type;
 	int						level;
 	int						index;
-	t_files					*files;
 	char					**args;
 	char					*cmd_path;
-	char                    *last_infile;
-	char                    *last_outfile;
-} t_family;
+	char					*last_infile;
+	char					*last_outfile;
+}							t_family;
 
 typedef struct s_token
 {
@@ -124,7 +126,7 @@ typedef struct s_list
 }							t_list;
 
 void						execution(t_family *family_head, t_token *env);
-t_family *							parsing(char *cmd, t_token *env);
+t_family					*parsing(char *cmd, t_token *env);
 
 /* Data structures*/
 t_token						*new_token(char *value, int type);
@@ -159,7 +161,7 @@ int							delete_var(t_token *env_head, char *unset_var);
 t_token						*env_process(char **env, int flag);
 void						joiner(t_token *head, t_token *env);
 char						*get_var_value(char *str);
-char **env_decompose(t_token *env_head);
+char						**env_decompose(t_token *env_head);
 
 // substitution functions
 char						*search_replace(char *str, int start, int end,
@@ -184,11 +186,14 @@ t_family					*smallest_level(t_family *family_ll);
 void						echo_builtin(t_family *cmd_row);
 void						pwd_builtin(void);
 void						cd_builtin(t_family *token, t_token *env);
-int						variables_handler(t_token *env_list,
+int							variables_handler(t_token *env_list,
 								t_family *cmd_family);
 
 // executionner function
-int						fake_executionner(t_family *family, t_token *env);
+int							fake_executionner(t_family *family, t_token *env);
+void						handle_fds(t_family *head);
+void						handle_pipes(t_family *cmd_row, t_token *env);
+
 void						print_env(t_token *env_head);
 
 // Syntatic Functions
@@ -196,8 +201,8 @@ int							syntactic_tester(t_token *head);
 void						organizer(t_family *family);
 void						omit_spaces(t_token *head);
 
-//bunda test
-int count_files(t_family *head);
+// bunda test
+int							count_files(t_family *head);
 
 /* Parsing struct of execution */
 // t_token *space_free(t_token *list);
@@ -205,5 +210,7 @@ void						extract_files(t_family *family_ll);
 void						print_2d(char **strs);
 void						extract_paths(t_family *head, t_token *env);
 t_token						*space_free(t_token *list);
+
+void print_args(t_family *head);
 
 #endif

@@ -1,13 +1,11 @@
 Makefile
 Notes
-bunda gane
-bunda3    
 en.subject.pdf
-include
 libft
 libft.a
 minishell
 minishell.c
 minishell.dSYM
-script.sh
+output
 srcs
+minishell$> 

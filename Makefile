@@ -19,7 +19,6 @@ SRCS_PARS = ./srcs/parsing/parsing.c \
 ./srcs/parsing/organizer.c \
 ./srcs/parsing/executionner.c \
 ./srcs/parsing/command.c \
-./srcs/parsing/redirs.c \
 ./srcs/parsing/redirs_bunda.c 
 SRCS_EXEC = ./srcs/execution/execution.c
 ENTRY = minishell.c

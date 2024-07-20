@@ -6,7 +6,7 @@
 /*   By: ael-maaz <ael-maaz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 11:09:14 by nhayoun           #+#    #+#             */
-/*   Updated: 2024/07/16 16:55:51 by ael-maaz         ###   ########.fr       */
+/*   Updated: 2024/07/20 10:26:08 by ael-maaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,18 +34,6 @@ void	print_family(t_family *head)
 	{
 		if (node->type != PIPE_ROW)
 		{
-			printf("infiles: \n");
-			if (node->in_files)
-				print_2d(node->in_files);
-			printf("outfiles: \n");
-			if (node->out_files)
-				print_2d(node->out_files);
-			printf("heredocs: \n");
-			if (node->here_docs)
-				print_2d(node->here_docs);
-			printf("appends: \n");
-			if (node->appends)
-				print_2d(node->appends);
 			printf("args: \n");
 			if (node->args)
 				print_2d(node->args);
@@ -72,12 +60,8 @@ t_family	*new_family(int type)
 	new_family->prev = NULL;
 	new_family->start = NULL;
 	new_family->end = NULL;
-	new_family->in_files = NULL;
-	new_family->out_files = NULL;
 	new_family->last_infile = NULL;
 	new_family->last_outfile = NULL;
-	new_family->here_docs = NULL;
-	new_family->appends = NULL;
 	new_family->cmd_path = NULL;
 	new_family->level = 0;
 	new_family->args = NULL;

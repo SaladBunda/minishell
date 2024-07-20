@@ -6,7 +6,7 @@
 /*   By: ael-maaz <ael-maaz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 16:17:39 by ael-maaz          #+#    #+#             */
-/*   Updated: 2024/07/19 12:36:23 by ael-maaz         ###   ########.fr       */
+/*   Updated: 2024/07/20 18:40:53 by ael-maaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,21 @@ char	*ft_strjoin_cmd(char const *s1, char const *s2)
 	return (ptr);
 }
 
+int test_var_empty(t_token *token)
+{
+	int i = 0;
+	if(token->type != VAR)
+		return 0;
+	else
+	{
+		while(token->value[i] && is_whitespace(token->value[i]) == 1)
+			i++;
+		if(token->value[i] == '\0')
+			return 1;	
+	}
+	return 0;
+}
+
 int count_args(t_token *start, t_token *end)
 {
 	t_token *tmp;
@@ -44,7 +59,7 @@ int count_args(t_token *start, t_token *end)
 	int count = 0;
 	while(tmp != end)
 	{
-		if (tmp->type != SPACE && (tmp->group == COMMAND || tmp->group == PARAM))
+		if (tmp->type != SPACE && (tmp->group == COMMAND || tmp->group == PARAM) && test_var_empty(tmp) == 0)
 			count++;
 		tmp = tmp->next;
 	}
@@ -112,13 +127,12 @@ void treat_path(t_family *token, t_token *env)
 
 void	extract_paths(t_family *head, t_token *env)
 {
-	(void) env;
 	t_family *tmp;
-	tmp = head->next;
 	t_token *ittr;
 	int i;
-	ittr = head->next->start;
 	int arg_count;
+	tmp = head->next;
+	ittr = head->next->start;
 	
 	while(tmp->type != E_CMD)
 	{
@@ -128,21 +142,25 @@ void	extract_paths(t_family *head, t_token *env)
 			arg_count = count_args(ittr, tmp->end->next);
 			if(!arg_count)
 				return ;
-			tmp->args = malloc((arg_count + 1) * sizeof(char *));
-			if(!tmp->args )
+			tmp->args = malloc((count_args(ittr, tmp->end->next) + 1) * sizeof(char *));
+			if(!tmp->args)
 				return ;
 			i = 1;
 			while(ittr != tmp->end->next)
 			{
-				if(ittr->group == COMMAND)
-					tmp->args[0] = ft_strdup(ittr->value); 
-				if(ittr->type != SPACE && ittr->group == PARAM)
-					tmp->args[i++] = ft_strdup(ittr->value);
+				if(test_var_empty(ittr) == 0)
+				{
+					if(ittr->group == COMMAND)
+						tmp->args[0] = ft_strdup(ittr->value); 
+					if(ittr->type != SPACE && ittr->group == PARAM)
+						tmp->args[i++] = ft_strdup(ittr->value);
+				}
 				ittr = ittr->next;
 			}
-			tmp->args[i] = NULL; 
-			tmp->cmd_path = ft_strdup(tmp->args[0]);
-			treat_path(tmp, env);
+			(tmp->args[i] = NULL, tmp->cmd_path = ft_strdup(tmp->args[0]), treat_path(tmp, env));
+			// tmp->args[i] = NULL; 
+			// tmp->cmd_path = ft_strdup(tmp->args[0]);
+			// treat_path(tmp, env);
 		}
 		tmp = tmp->next;
 	}

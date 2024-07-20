@@ -6,11 +6,33 @@
 /*   By: ael-maaz <ael-maaz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/15 15:04:57 by ael-maaz          #+#    #+#             */
-/*   Updated: 2024/07/19 12:32:19 by ael-maaz         ###   ########.fr       */
+/*   Updated: 2024/07/20 10:28:27 by ael-maaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
+
+t_token	*space_free(t_token *list)
+{
+	t_token	*tokens_copy;
+	t_token	*head;
+	t_token	*node_copy;
+	t_token	*ittr;
+
+	tokens_copy = create_list();
+	head = tokens_copy->prev;
+	ittr = list->next;
+	while (ittr->type != E_CMD)
+	{
+		if (ittr->type != SPACE)
+		{
+			node_copy = new_token(ittr->value, ittr->type);
+			append_token(tokens_copy, node_copy);
+		}
+		ittr = ittr->next;
+	}
+	return (head);
+}
 
 int count_files(t_family *head)
 {

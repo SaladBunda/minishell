@@ -6,7 +6,7 @@
 /*   By: ael-maaz <ael-maaz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 20:32:35 by nhayoun           #+#    #+#             */
-/*   Updated: 2024/07/19 14:32:27 by ael-maaz         ###   ########.fr       */
+/*   Updated: 2024/07/20 19:58:33 by ael-maaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,30 +137,45 @@ void handle_heredocs(t_family *head)
 void single_command(t_family *family, t_token *env, int i, int fork_id)
 {
 	t_family *tmp;
+	int in;
+	int out;
 
 	tmp = family->next;
 	handle_heredocs(tmp);
+	handle_fds(tmp);
+	i = -1;
+	while(tmp->files[++i].path)
+	{
+		if(tmp->last_infile && ft_fcmp(tmp->files[i].path, tmp->last_infile) == 0)
+			(in = tmp->files[i].fd,dup2(in,STDIN_FILENO));
+		if(tmp->last_outfile && ft_fcmp(tmp->files[i].path, tmp->last_outfile) == 0)
+			(out = tmp->files[i].fd , dup2(out,STDOUT_FILENO));
+	}
+	if (fake_executionner(family, env) == 0)
+	{
+		close(in);
+		close(out);
+		return ;
+	}
     fork_id = fork();
     if(fork_id == -1)
         return ;
     if(fork_id == 0)
     {
-		handle_fds(tmp);
 		i = -1;
 		while(tmp->files[++i].path)
 		{
 			if(tmp->last_infile && ft_fcmp(tmp->files[i].path, tmp->last_infile) == 0)
-				dup2(tmp->files[i].fd,STDIN_FILENO);
+				(dup2(tmp->files[i].fd,STDIN_FILENO),close(tmp->files[i].fd));
 			if(tmp->last_outfile && ft_fcmp(tmp->files[i].path, tmp->last_outfile) == 0)
-				dup2(tmp->files[i].fd,STDOUT_FILENO);
+				(dup2(tmp->files[i].fd,STDOUT_FILENO),close(tmp->files[i].fd));
 		}
-		if (fake_executionner(family, env) == 0)
-			return ;
 		char **env_arr = env_decompose(env);
 		printf("%d\n",execve(tmp->cmd_path, tmp->args, env_arr));
 		perror("execve:");
+		exit(1);
     }
-    wait(NULL);
+    while(wait(NULL)> 0);
 }
 
 
@@ -249,9 +264,9 @@ void    execution(t_family *head, t_token *env)
 		while(tmp->files[i].path)
 		{
 			if(tmp->last_infile && ft_fcmp(tmp->files[i].path, tmp->last_infile) == 0)
-				dup2(tmp->files[i].fd,STDIN_FILENO);
+				(dup2(tmp->files[i].fd,STDIN_FILENO),close(tmp->files[i].fd));
 			if(tmp->last_outfile && ft_fcmp(tmp->files[i].path, tmp->last_outfile) == 0)
-				dup2(tmp->files[i].fd,STDOUT_FILENO);
+				(dup2(tmp->files[i].fd,STDOUT_FILENO),close(tmp->files[i].fd));
 			i++;
 		}
         char **env_arr = env_decompose(env);
