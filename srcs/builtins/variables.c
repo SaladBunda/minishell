@@ -6,7 +6,7 @@
 /*   By: ael-maaz <ael-maaz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 15:41:39 by nhayoun           #+#    #+#             */
-/*   Updated: 2024/07/14 11:29:26 by ael-maaz         ###   ########.fr       */
+/*   Updated: 2024/07/21 19:34:07 by ael-maaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,9 +66,9 @@ void	export_builtin(t_token *env_list, t_family *cmd_family)
 void	env_builtin(t_token *env_list, t_family *cmd_family)
 {
 	t_token	*node;
-
-	if (cmd_family->start != cmd_family->end)
-		return ;
+	(void) cmd_family;
+	// if (cmd_family->start != cmd_family->end)
+	// 	return ;
 	node = env_list->next;
 	while (node->type != E_CMD)
 	{

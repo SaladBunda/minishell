@@ -6,7 +6,7 @@
 /*   By: ael-maaz <ael-maaz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 11:57:31 by ael-maaz          #+#    #+#             */
-/*   Updated: 2024/07/14 11:29:05 by ael-maaz         ###   ########.fr       */
+/*   Updated: 2024/07/21 16:34:23 by ael-maaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ int	fake_executionner(t_family *family_head, t_token *env)
 	t_family *tmp;
 	t_token *indexer;
 
-	tmp = family_head->next;
+	tmp = family_head;
 	while (tmp->type != E_CMD)
 	{
 		if (tmp->type != PIPE_ROW)

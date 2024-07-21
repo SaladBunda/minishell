@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-maaz <ael-maaz@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: nhayoun <nhayoun@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 20:32:27 by nhayoun           #+#    #+#             */
-/*   Updated: 2024/07/16 14:55:16 by ael-maaz         ###   ########.fr       */
+/*   Updated: 2024/07/19 18:37:07 by nhayoun          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,7 +128,7 @@ t_family	*parsing(char *cmd, t_token *env)
 	family_head = create_family_ll(head);
 	organizer(family_head);
 	// fake_executionner(family_head, env);
-	print_tokens(head);
+	//print_tokens(head);
 	extract_paths(family_head, env);
 	extract_files(family_head);
 	// print_tokens(head);

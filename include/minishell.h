@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nhayoun <nhayoun@student.1337.ma>          +#+  +:+       +#+        */
+/*   By: ael-maaz <ael-maaz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 20:33:02 by nhayoun           #+#    #+#             */
-/*   Updated: 2024/07/19 18:55:07 by nhayoun          ###   ########.fr       */
+/*   Updated: 2024/07/21 16:04:22 by ael-maaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -191,7 +191,7 @@ int							variables_handler(t_token *env_list,
 
 // executionner function
 int							fake_executionner(t_family *family, t_token *env);
-void						handle_fds(t_family *head);
+int						handle_fds(t_family *head);
 void						handle_pipes(t_family *cmd_row, t_token *env);
 
 void						print_env(t_token *env_head);

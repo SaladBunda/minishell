@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   family_copy.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-maaz <ael-maaz@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: nhayoun <nhayoun@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 11:09:14 by nhayoun           #+#    #+#             */
-/*   Updated: 2024/07/20 10:26:08 by ael-maaz         ###   ########.fr       */
+/*   Updated: 2024/07/19 18:22:15 by nhayoun          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ void	print_family(t_family *head)
 	{
 		if (node->type != PIPE_ROW)
 		{
+			printf("infiles: \n");
 			printf("args: \n");
 			if (node->args)
 				print_2d(node->args);
