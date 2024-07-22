@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handlers.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nhayoun <nhayoun@student.1337.ma>          +#+  +:+       +#+        */
+/*   By: ael-maaz <ael-maaz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/29 16:21:57 by nhayoun           #+#    #+#             */
-/*   Updated: 2024/07/02 14:52:10 by nhayoun          ###   ########.fr       */
+/*   Updated: 2024/07/22 16:05:14 by ael-maaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,10 +119,20 @@ t_token	*words_handler(char *cmd, int *index, int state)
 	i = *index;
 	token = NULL;
 	if (state == VAR)
+	{
 		(*index)++;
-	while (cmd[*index] && is_special(cmd[*index]) == 0)
-		(*index)++;
-	str = ft_substr(cmd, i, (*index) - i);
+		while (cmd[*index] && is_special_var(cmd[*index]) == 0)
+			(*index)++;
+		if(cmd[*index] && cmd[*index] == '?')
+			(*index)++;
+		str = ft_substr(cmd, i, (*index) - i);
+	}
+	else
+	{
+		while (cmd[*index] && is_special(cmd[*index]) == 0)
+			(*index)++;
+		str = ft_substr(cmd, i, (*index) - i);	
+	}
 	(*index)--;
 	token = new_token(str, state);
 	return (token);

@@ -6,7 +6,7 @@
 /*   By: ael-maaz <ael-maaz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/19 17:05:45 by nhayoun           #+#    #+#             */
-/*   Updated: 2024/07/21 19:14:49 by ael-maaz         ###   ########.fr       */
+/*   Updated: 2024/07/22 16:58:37 by ael-maaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@ void	get_io(t_family *cmd_row)
 	tmp->prev_fd = -1;
 	while (tmp->files[i].path)
 	{
-		printf("current fd: %d\n", tmp->files[i].fd);
 		if (tmp->last_infile && ft_fcmp(tmp->files[i].path,
 				tmp->last_infile) == 0)
 			tmp->in = tmp->files[i].fd;

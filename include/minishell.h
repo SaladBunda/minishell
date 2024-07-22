@@ -6,7 +6,7 @@
 /*   By: ael-maaz <ael-maaz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 20:33:02 by nhayoun           #+#    #+#             */
-/*   Updated: 2024/07/21 16:04:22 by ael-maaz         ###   ########.fr       */
+/*   Updated: 2024/07/22 15:59:28 by ael-maaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,6 +148,7 @@ int							is_whitespace(int c);
 int							brackets(char *cmd);
 int							quotes(char *cmd);
 int							is_special(char c);
+int	is_special_var(char c);
 void						bracket_util(char *str, int i, int j, int *opened);
 
 /* Free Functions */

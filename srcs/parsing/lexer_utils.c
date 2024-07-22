@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nhayoun <nhayoun@student.1337.ma>          +#+  +:+       +#+        */
+/*   By: ael-maaz <ael-maaz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/02 10:05:46 by nhayoun           #+#    #+#             */
-/*   Updated: 2024/07/09 18:30:30 by nhayoun          ###   ########.fr       */
+/*   Updated: 2024/07/22 16:50:19 by ael-maaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,22 @@ int	is_special(char c)
 	char	*symbols;
 
 	symbols = "\"\'|< &$()>*\t\n\r\v\f";
+	i = 0;
+	while (symbols[i])
+	{
+		if (symbols[i] == c)
+			return (1);
+		i++;
+	}
+	return (0);
+}
+
+int	is_special_var(char c)
+{
+	int		i;
+	char	*symbols;
+
+	symbols = "\"\'-?|< &$()>*\t\n\r\v\f";
 	i = 0;
 	while (symbols[i])
 	{

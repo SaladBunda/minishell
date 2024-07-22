@@ -6,7 +6,7 @@
 /*   By: ael-maaz <ael-maaz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/02 11:56:22 by ael-maaz          #+#    #+#             */
-/*   Updated: 2024/07/21 15:32:31 by ael-maaz         ###   ########.fr       */
+/*   Updated: 2024/07/22 16:54:36 by ael-maaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ int	var_var(t_token *env, t_token *token, int i, int j)
 	else
 	{
 		free(token->value);
-		token->value = ft_strdup("");
+		token->value = ft_strdup("$");
 	}
 	return (0);
 }
