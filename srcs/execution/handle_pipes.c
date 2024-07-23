@@ -6,7 +6,7 @@
 /*   By: ael-maaz <ael-maaz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/19 17:05:45 by nhayoun           #+#    #+#             */
-/*   Updated: 2024/07/22 16:58:37 by ael-maaz         ###   ########.fr       */
+/*   Updated: 2024/07/22 17:33:11 by ael-maaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,10 +87,13 @@ void	process_cmd(t_family *cmd_row, t_token *env, int *fds, int pipes, int i,
 		(dup2(cmd_row->out, STDOUT_FILENO), close(cmd_row->out));
 	close(saved);
 	close_fds(fds);
+	// dprintf(2,"path: -%s-/command: -%s-\n",cmd_row->cmd_path,cmd_row->args[0]);
 	if(!cmd_row->cmd_path && !cmd_row->args)
-			exit(0);
-		else if (!cmd_row->cmd_path && cmd_row->args[0])
-			(dprintf(2,"minishell: %s: command not found\n",cmd_row->args[0]),exit(1));
+		exit(0);
+	else if (!cmd_row->cmd_path && cmd_row->args[0])
+		(dprintf(2,"minishell: %s: command not found\n",cmd_row->args[0]),exit(1));
+	else if (cmd_row->cmd_path && cmd_row->args[0] == '\0')
+		exit(0);
 	if (fake_executionner(cmd_row, env) == 0)
 		exit(0);
 	if (execve(cmd_row->cmd_path, cmd_row->args, env_decompose(env)) == -1)

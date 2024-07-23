@@ -6,7 +6,7 @@
 /*   By: ael-maaz <ael-maaz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/02 10:05:46 by nhayoun           #+#    #+#             */
-/*   Updated: 2024/07/22 16:50:19 by ael-maaz         ###   ########.fr       */
+/*   Updated: 2024/07/22 17:43:26 by ael-maaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ int	quotes(char *cmd)
 			quo(cmd, &i, &check, '\"');
 	}
 	if (check == 1)
-		return (1);
+		return (dprintf(2, "syntax error\n"),2);
 	return (0);
 }
 
