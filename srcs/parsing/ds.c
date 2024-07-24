@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ds.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-maaz <ael-maaz@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: nhayoun <nhayoun@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 13:18:32 by nhayoun           #+#    #+#             */
-/*   Updated: 2024/07/08 11:36:26 by ael-maaz         ###   ########.fr       */
+/*   Updated: 2024/07/22 11:20:19 by nhayoun          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ t_token	*new_token(char *value, int type)
 	new_token->value = value;
 	new_token->level = 0;
 	new_token->group = 0;
+	new_token->hidden = 0;
 	return (new_token);
 }
 

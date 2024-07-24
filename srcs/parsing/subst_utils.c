@@ -6,7 +6,7 @@
 /*   By: ael-maaz <ael-maaz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 09:42:30 by ael-maaz          #+#    #+#             */
-/*   Updated: 2024/07/23 10:11:41 by ael-maaz         ###   ########.fr       */
+/*   Updated: 2024/07/05 09:52:50 by ael-maaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	var_name(char *cmd, int *index, int state)
 	i = *index;
 	token = NULL;
 	(*index)++;
-	while (cmd[*index] && cmd[*index] != '/' && is_special_var(cmd[*index]) == 0)
+	while (cmd[*index] && cmd[*index] != '/' && is_special(cmd[*index]) == 0)
 		(*index)++;
 	(*index)--;
 }

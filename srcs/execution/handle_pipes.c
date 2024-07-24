@@ -6,11 +6,13 @@
 /*   By: ael-maaz <ael-maaz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/19 17:05:45 by nhayoun           #+#    #+#             */
-/*   Updated: 2024/07/22 17:33:11 by ael-maaz         ###   ########.fr       */
+/*   Updated: 2024/07/23 20:51:01 by ael-maaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
+
+extern int	g_last_exit_status;
 
 void	get_io(t_family *cmd_row)
 {
@@ -24,6 +26,7 @@ void	get_io(t_family *cmd_row)
 	tmp->prev_fd = -1;
 	while (tmp->files[i].path)
 	{
+		//printf("current fd: %d\n", tmp->files[i].fd);
 		if (tmp->last_infile && ft_fcmp(tmp->files[i].path,
 				tmp->last_infile) == 0)
 			tmp->in = tmp->files[i].fd;
@@ -77,8 +80,8 @@ void	process_cmd(t_family *cmd_row, t_token *env, int *fds, int pipes, int i,
 	}
 	else
 	{
-		//if (saved != -1)
-			dup2(saved, STDIN_FILENO);
+		// if (saved != -1)
+		dup2(saved, STDIN_FILENO);
 		dup2(fds[1], STDOUT_FILENO);
 	}
 	if (cmd_row->in != 0)
@@ -87,17 +90,17 @@ void	process_cmd(t_family *cmd_row, t_token *env, int *fds, int pipes, int i,
 		(dup2(cmd_row->out, STDOUT_FILENO), close(cmd_row->out));
 	close(saved);
 	close_fds(fds);
-	// dprintf(2,"path: -%s-/command: -%s-\n",cmd_row->cmd_path,cmd_row->args[0]);
+	// dprintf(2, "path:%s\n",cmd_row->cmd_path/* ,cmd_row->args[0] */);
 	if(!cmd_row->cmd_path && !cmd_row->args)
-		exit(0);
-	else if (!cmd_row->cmd_path && cmd_row->args[0])
-		(dprintf(2,"minishell: %s: command not found\n",cmd_row->args[0]),exit(1));
-	else if (cmd_row->cmd_path && cmd_row->args[0] == '\0')
 		exit(0);
 	if (fake_executionner(cmd_row, env) == 0)
 		exit(0);
+	else if (!cmd_row->cmd_path && cmd_row->args[0]!= '\0')
+		(dprintf(2,"minishell: %s: command not found\n",cmd_row->args[0]),g_last_exit_status = 127,exit(127));
+	// else if (cmd_row->cmd_path && cmd_row->args[0] == '\0')
+	// 	(g_last_exit_status = 0,exit(0));
 	if (execve(cmd_row->cmd_path, cmd_row->args, env_decompose(env)) == -1)
-		perror("execve");
+		(g_last_exit_status = 1,perror("execve"));
 	exit(1);
 }
 
@@ -106,8 +109,9 @@ void	handle_pipes(t_family *cmd_row, t_token *env)
 	t_family *ittr_node;
 	int i;
 	int pipes;
-	int ps;
+	pid_t ps;
 	int fds[2];
+	int status = 0;
 	int prev_fd = 0;
 	int saved = -1;
 
@@ -126,12 +130,18 @@ void	handle_pipes(t_family *cmd_row, t_token *env)
 				get_io(ittr_node);
 				process_cmd(ittr_node, env, fds, pipes, i, prev_fd, saved);
 			}
+			else if (ps < 0)
+				status = -1;
 			else
 			{
+				if (waitpid(ps, &status, 0) != ps)
+					status = -1;
+				else if (WIFEXITED(status))
+					status = WEXITSTATUS(status);
 				close(saved);
-				//if (saved == -1)
+				// if (saved == -1)
 				saved = fds[0];
-				//else
+				// else
 				//	saved = -1;
 				close(fds[1]);
 				// close(fds[0]);
@@ -142,8 +152,8 @@ void	handle_pipes(t_family *cmd_row, t_token *env)
 		}
 		ittr_node = ittr_node->next;
 	}
-	 close_fds(fds);
+	g_last_exit_status = status;
+	close_fds(fds);
 	close(saved);
-	while (wait(NULL) > 0)
-		;
+	// while(wait(NULL) > 0);
 }

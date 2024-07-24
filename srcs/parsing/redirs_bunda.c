@@ -6,7 +6,7 @@
 /*   By: ael-maaz <ael-maaz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/15 15:04:57 by ael-maaz          #+#    #+#             */
-/*   Updated: 2024/07/20 10:28:05 by ael-maaz         ###   ########.fr       */
+/*   Updated: 2024/07/24 13:02:41 by ael-maaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,7 @@ void	last_io(t_family *cmd_row)
 		cmd_row->last_outfile = ft_strdup(outfile);
 }
 
+
 void	fill_files_array(t_family *family, t_token *start, t_token *end, int *i)
 {
 	int	type;
@@ -90,6 +91,7 @@ void	fill_files_array(t_family *family, t_token *start, t_token *end, int *i)
 			if (start != end)
 			{
 				family->files[*i].path = ft_strdup(start->value);
+				family->files[*i].lim = ft_strdup(start->value);
 				family->files[*i].type = type;
 				family->files[*i].is_var = start->type;
 				(*i)++;
@@ -100,6 +102,57 @@ void	fill_files_array(t_family *family, t_token *start, t_token *end, int *i)
 		else
 			break ;
 	}
+}
+
+char	*create_name_2(char *limiter,int i)
+{
+	char	*str;
+	char	*str2;
+	char	*free_var;
+	char *number;
+
+	str = "/tmp/";
+	str2 = ft_strjoin(".", limiter);
+	str = ft_strjoin(str, str2);
+	free_var = str;
+	number = ft_itoa(i);
+	str = ft_strjoin(str, number);
+	free(number);
+	free(free_var);
+	free(str2);
+	// i = 0;
+	// while (access(str, F_OK) == 0)
+	// {
+	// 	free_var = str;
+	// 	free(free_var);
+	// 	i++;
+	return (str);
+}
+
+void change_name(t_family * head)
+{
+	t_family *tmp;
+	tmp = head;
+	int i;
+	int j = 0;
+	while(tmp->type != E_CMD)
+	{
+		if(tmp->type == CMD_ROW)
+		{
+			i = 0;
+			while(tmp->files[i].path != NULL)
+			{
+				if(tmp->files[i].type == HEREDOC)
+				{
+					free(tmp->files[i].path);
+					tmp->files[i].path = create_name_2(tmp->files[i].lim, j++);
+				}		
+				i++;
+			}
+		}
+		tmp = tmp->next;
+	}
+	
 }
 
 void	extract_files(t_family *family_ll)
@@ -121,8 +174,24 @@ void	extract_files(t_family *family_ll)
 			tmp = ittr_node->start;
 			i = 0;
 			fill_files_array(ittr_node, tmp, ittr_node->end->next, &i);
+			
 			ittr_node->files[i].path = NULL;
 			last_io(ittr_node);
+		}
+		ittr_node = ittr_node->next;
+	}
+	change_name(family_ll);
+	ittr_node = family_ll->next;
+	while (ittr_node->type != E_CMD)
+	{
+		if (ittr_node->type == CMD_ROW)
+		{
+			i = 0;
+			while(ittr_node->files[i].path != NULL)
+			{
+				printf("paths:%s     limiter:%s\n",ittr_node->files[i].path,ittr_node->files[i].lim);
+				i++;
+			}
 		}
 		ittr_node = ittr_node->next;
 	}

@@ -6,11 +6,13 @@
 /*   By: ael-maaz <ael-maaz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 15:58:14 by nhayoun           #+#    #+#             */
-/*   Updated: 2024/07/21 18:30:36 by ael-maaz         ###   ########.fr       */
+/*   Updated: 2024/07/23 11:20:36 by ael-maaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
+
+extern int g_last_exit_status;
 
 void	echo_builtin(t_family *cmd_row)
 {
@@ -70,4 +72,5 @@ void	echo_builtin(t_family *cmd_row)
 	}
 	if(new_line == 1)
 		printf("\n");
+	g_last_exit_status = 0;
 }

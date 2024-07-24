@@ -6,7 +6,7 @@
 /*   By: ael-maaz <ael-maaz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 16:17:39 by ael-maaz          #+#    #+#             */
-/*   Updated: 2024/07/21 18:56:38 by ael-maaz         ###   ########.fr       */
+/*   Updated: 2024/07/24 12:46:02 by ael-maaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,8 +108,13 @@ void treat_path(t_family *token, t_token *env)
 	char *path_var;
 	char *tmp = token->cmd_path;
 	char *joined = NULL;
-	path_var = get_path_var(env);
-	path_array = ft_split(path_var, ':');
+	if(tmp[0] == '\0')
+	{
+		token->cmd_path = NULL;
+		return ;
+	}
+	(path_var = get_path_var(env), path_array = ft_split(path_var, ':'));
+	free(path_var);
 	if(!path_array)
 		return ;
 	if(access(token->cmd_path, X_OK) == 0)
@@ -117,14 +122,16 @@ void treat_path(t_family *token, t_token *env)
 	while(path_array[++i])
 	{
 		joined = ft_strjoin_cmd(path_array[i], tmp);
-		
 		if(access(joined, R_OK) == 0)
 		{
 			token->cmd_path = joined;
-			break;
+			free_darr(path_array);
+			return ;
 		}
 		free(joined);
 	}
+	free_darr(path_array);
+	token->cmd_path = NULL;
 }
 
 void	extract_paths(t_family *head, t_token *env)
@@ -141,7 +148,10 @@ void	extract_paths(t_family *head, t_token *env)
 		{
 			(ittr = tmp->start, arg_count = count_args(ittr, tmp->end->next));
 			if(!arg_count)
-				return ;
+			{
+				tmp = tmp->next;
+				continue ;
+			}
 			tmp->args = malloc((arg_count + 1) * sizeof(char *));
 			i = 1;
 			while(ittr != tmp->end->next)

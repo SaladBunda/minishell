@@ -6,7 +6,7 @@
 /*   By: ael-maaz <ael-maaz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 20:33:02 by nhayoun           #+#    #+#             */
-/*   Updated: 2024/07/22 15:59:28 by ael-maaz         ###   ########.fr       */
+/*   Updated: 2024/07/23 19:50:51 by ael-maaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include <fcntl.h>
 # include <readline/history.h>
 # include <readline/readline.h>
+# include <signal.h>
 # include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
@@ -86,6 +87,7 @@ typedef struct s_files
 	int						type;
 	int						fd;
 	int						is_var;
+	char					*lim;
 }							t_files;
 
 typedef struct s_family
@@ -114,6 +116,7 @@ typedef struct s_token
 	char					*value;
 	int						group;
 	int						level;
+	int						hidden;
 	t_family				*family;
 	t_token					*next;
 	t_token					*prev;
@@ -144,11 +147,10 @@ t_token						*single_handlers(char *cmd, int *index, int state,
 								char c);
 t_token						*wide_handlers(char *cmd, int *index, char c);
 int							is_whitespace(int c);
-
+int							is_special_var(char c);
 int							brackets(char *cmd);
 int							quotes(char *cmd);
 int							is_special(char c);
-int	is_special_var(char c);
 void						bracket_util(char *str, int i, int j, int *opened);
 
 /* Free Functions */
@@ -177,6 +179,7 @@ void						print_family(t_family *head);
 t_family					*new_family(int type);
 
 // and/or functions parsing parantheses
+
 void						level_checker(t_family *head);
 void						free_list(t_token *head);
 
@@ -192,7 +195,7 @@ int							variables_handler(t_token *env_list,
 
 // executionner function
 int							fake_executionner(t_family *family, t_token *env);
-int						handle_fds(t_family *head);
+int							handle_fds(t_family *head);
 void						handle_pipes(t_family *cmd_row, t_token *env);
 
 void						print_env(t_token *env_head);
@@ -212,6 +215,8 @@ void						print_2d(char **strs);
 void						extract_paths(t_family *head, t_token *env);
 t_token						*space_free(t_token *list);
 
-void print_args(t_family *head);
+void						print_args(t_family *head);
+
+void						signal_handler(void);
 
 #endif

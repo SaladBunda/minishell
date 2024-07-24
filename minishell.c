@@ -6,13 +6,13 @@
 /*   By: ael-maaz <ael-maaz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 20:32:39 by nhayoun           #+#    #+#             */
-/*   Updated: 2024/07/21 15:29:22 by ael-maaz         ###   ########.fr       */
+/*   Updated: 2024/07/24 13:05:43 by ael-maaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-
-
 #include "./include/minishell.h"
+
+int		g_last_exit_status = 0;
 
 void	print_env(t_token *env_head)
 {
@@ -64,7 +64,10 @@ int	main(int ac, char **av, char **env)
 			continue ;
 		}
 		free(cmd);
+		//sig_int();
 		execution(family_head, env_ll);
+		// free_list(family_head->start);
+		system("leaks -quiet minishell");
 		// system("leaks -quiet minishell");
 	}
 	free_list(env_ll);

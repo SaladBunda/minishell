@@ -6,11 +6,27 @@
 /*   By: ael-maaz <ael-maaz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 15:42:57 by ael-maaz          #+#    #+#             */
-/*   Updated: 2024/07/05 19:56:05 by ael-maaz         ###   ########.fr       */
+/*   Updated: 2024/07/23 10:41:15 by ael-maaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
+
+int	is_special_var(char c)
+{
+	int		i;
+	char	*symbols;
+
+	symbols = "\"\'-?|@< &$()>*\t\n\r\v\f";
+	i = 0;
+	while (symbols[i])
+	{
+		if (symbols[i] == c)
+			return (1);
+		i++;
+	}
+	return (0);
+}
 
 void level_checker(t_family *head)
 {

@@ -6,11 +6,13 @@
 /*   By: ael-maaz <ael-maaz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/02 10:05:46 by nhayoun           #+#    #+#             */
-/*   Updated: 2024/07/22 17:43:26 by ael-maaz         ###   ########.fr       */
+/*   Updated: 2024/07/23 11:12:28 by ael-maaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
+
+extern int g_last_exit_status;
 
 int	is_whitespace(int c)
 {
@@ -25,22 +27,6 @@ int	is_special(char c)
 	char	*symbols;
 
 	symbols = "\"\'|< &$()>*\t\n\r\v\f";
-	i = 0;
-	while (symbols[i])
-	{
-		if (symbols[i] == c)
-			return (1);
-		i++;
-	}
-	return (0);
-}
-
-int	is_special_var(char c)
-{
-	int		i;
-	char	*symbols;
-
-	symbols = "\"\'-?|< &$()>*\t\n\r\v\f";
 	i = 0;
 	while (symbols[i])
 	{
@@ -78,7 +64,7 @@ int	quotes(char *cmd)
 			quo(cmd, &i, &check, '\"');
 	}
 	if (check == 1)
-		return (dprintf(2, "syntax error\n"),2);
+		return (g_last_exit_status = 3,write(2,"unclosed quote\n",15), 1);
 	return (0);
 }
 

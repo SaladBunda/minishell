@@ -6,11 +6,13 @@
 /*   By: ael-maaz <ael-maaz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 09:48:24 by ael-maaz          #+#    #+#             */
-/*   Updated: 2024/07/21 17:09:04 by ael-maaz         ###   ########.fr       */
+/*   Updated: 2024/07/23 11:14:57 by ael-maaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
+
+extern int g_last_exit_status;
 
 char	*get_var_name(char *str)
 {
@@ -71,7 +73,7 @@ char *get_home(t_token *env)
 	if (str != NULL)
 		return str;
 	else
-		return(write(2, "HOME not set\n",13), NULL);
+		return(g_last_exit_status = 1,write(2, "HOME not set\n",13), NULL);
 }
 
 void edit_env(t_token *env, char *old_path)
@@ -121,7 +123,7 @@ void	cd_builtin(t_family *token, t_token *env)
 	else
 	{
 		if (chdir(tmp->args[1]) != 0)
-			printf("minishell: No such file or directory\n");
+			(printf("minishell: No such file or directory\n"), g_last_exit_status = 1) ;
 		else
 			edit_env(env,old_path);
 		free(old_path);

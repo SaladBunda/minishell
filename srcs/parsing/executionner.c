@@ -6,7 +6,7 @@
 /*   By: ael-maaz <ael-maaz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 11:57:31 by ael-maaz          #+#    #+#             */
-/*   Updated: 2024/07/21 16:34:23 by ael-maaz         ###   ########.fr       */
+/*   Updated: 2024/07/23 15:05:55 by ael-maaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,12 @@ int	which_command(t_token *cmd, t_family *family_node, t_token *env)
 	else if (ft_fcmp(cmd->value, "echo") == 0)
 		echo_builtin(family_node);
 	else if (ft_fcmp(cmd->value, "env") == 0|| !ft_fcmp(cmd->value,"export") || !ft_fcmp(cmd->value, "unset"))
-		return(variables_handler(env, family_node));
+		return(variables_handler(env, family_node), 0);
 	else
 		return (1);
 	return (0);
 }
+
 
 int	fake_executionner(t_family *family_head, t_token *env)
 {

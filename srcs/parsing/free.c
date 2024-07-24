@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nhayoun <nhayoun@student.1337.ma>          +#+  +:+       +#+        */
+/*   By: ael-maaz <ael-maaz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/02 15:20:18 by nhayoun           #+#    #+#             */
-/*   Updated: 2024/07/11 11:30:24 by nhayoun          ###   ########.fr       */
+/*   Updated: 2024/07/24 13:21:07 by ael-maaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,4 +31,9 @@ void	free_darr(char **arr)
 		i++;
 	}
 	free(arr);
+}
+
+void free_family(t_family *head)
+{
+	
 }
