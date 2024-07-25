@@ -6,7 +6,7 @@
 /*   By: ael-maaz <ael-maaz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 16:17:39 by ael-maaz          #+#    #+#             */
-/*   Updated: 2024/07/24 12:46:02 by ael-maaz         ###   ########.fr       */
+/*   Updated: 2024/07/25 20:09:39 by ael-maaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,11 +126,13 @@ void treat_path(t_family *token, t_token *env)
 		{
 			token->cmd_path = joined;
 			free_darr(path_array);
+			free(tmp);
 			return ;
 		}
 		free(joined);
 	}
 	free_darr(path_array);
+	free(tmp);
 	token->cmd_path = NULL;
 }
 

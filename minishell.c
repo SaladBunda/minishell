@@ -6,7 +6,7 @@
 /*   By: ael-maaz <ael-maaz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 20:32:39 by nhayoun           #+#    #+#             */
-/*   Updated: 2024/07/24 13:05:43 by ael-maaz         ###   ########.fr       */
+/*   Updated: 2024/07/25 19:55:53 by ael-maaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,7 @@ int	main(int ac, char **av, char **env)
 		free(cmd);
 		//sig_int();
 		execution(family_head, env_ll);
+		free_all_family(family_head);
 		// free_list(family_head->start);
 		system("leaks -quiet minishell");
 		// system("leaks -quiet minishell");

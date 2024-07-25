@@ -6,7 +6,7 @@
 /*   By: ael-maaz <ael-maaz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 20:33:02 by nhayoun           #+#    #+#             */
-/*   Updated: 2024/07/23 19:50:51 by ael-maaz         ###   ########.fr       */
+/*   Updated: 2024/07/25 19:48:47 by ael-maaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -156,6 +156,7 @@ void						bracket_util(char *str, int i, int j, int *opened);
 /* Free Functions */
 void						free_token(t_token *token);
 void						free_darr(char **arr);
+void free_all_family(t_family *head);
 
 /* env functions */
 int							append_var(t_token *env_head, t_token *env_tail,
