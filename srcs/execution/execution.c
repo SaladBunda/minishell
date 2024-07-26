@@ -6,7 +6,7 @@
 /*   By: ael-maaz <ael-maaz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 20:32:35 by nhayoun           #+#    #+#             */
-/*   Updated: 2024/07/24 12:54:24 by ael-maaz         ###   ########.fr       */
+/*   Updated: 2024/07/26 10:43:13 by ael-maaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -190,8 +190,12 @@ void	single_command(t_family *cmd, t_token *env, int i, int fork_id)
 	if (handle_fds(cmd) == 1)
 		return ;
 	(i = -1, get_io_single(cmd));
-	if (!cmd->cmd_path && !cmd->args)
+	if ((!cmd->cmd_path && !cmd->args) || fake_executionner(cmd, env) == 0)
+	{
+		(close(cmd->in), close(cmd->out), dup2(in, STDIN_FILENO), close(in));
+		(dup2(out, STDOUT_FILENO), close(out));
 		return ;
+	}
 	if (fake_executionner(cmd, env) == 0)
 	{
 		(close(cmd->in), close(cmd->out), dup2(in, STDIN_FILENO), close(in));

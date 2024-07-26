@@ -6,7 +6,7 @@
 /*   By: ael-maaz <ael-maaz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 15:06:46 by ael-maaz          #+#    #+#             */
-/*   Updated: 2024/07/23 11:04:34 by ael-maaz         ###   ########.fr       */
+/*   Updated: 2024/07/26 18:41:10 by ael-maaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,31 +40,37 @@ int	is_string(t_token *t)
 int	syntactic_tester(t_token *head)
 {
 	t_token	*tmp = space_free(head);
+	t_token *tmp2 = tmp;
+	// t_token *tmp2 = tmp;
 	//print_tokens(tmp);
 	// tmp = head->next;
-	while (tmp->type != E_CMD)
+	while (tmp2->type != E_CMD)
 	{
-		if (tmp->type == PIPE && tmp->prev->type == S_CMD)
+		if (tmp2->type == PIPE && tmp2->prev->type == S_CMD)
 			return (printf("syntax error near unexpected token %s\n",
-						tmp->value), g_last_exit_status = 2,1);
-		if (is_op(tmp) == 1 && tmp->next)
+						tmp2->value), free_list2(tmp),g_last_exit_status = 2,1);
+		if (is_op(tmp2) == 1 && tmp2->next)
 		{
-			// if (tmp->next->type == SPACE)
-			// 	tmp = tmp->next;
-			if (not_string(tmp->next) == 1)
+			// if (tmp2->next->type == SPACE)
+			// 	tmp2 = tmp2->next;
+			if (not_string(tmp2->next) == 1)
 				return (printf("syntax error near unexpected token %s\n",
-						tmp->next->value), g_last_exit_status = 2,1);
+						tmp2->next->value),free_list2(tmp), g_last_exit_status = 2,1);
 		}
-		else if (tmp->type == PIPE && tmp->next)
+		else if (tmp2->type == PIPE && tmp2->next)
 		{
-			// if (tmp->next->type == SPACE)
-			// 	tmp = tmp->next;
-			if ((not_string(tmp->next) == 1 && is_op(tmp->next) == 0)
-				|| tmp->next->type == PIPE)
+			// if (tmp2->next->type == SPACE)
+			// 	tmp2 = tmp2->next;
+			if ((not_string(tmp2->next) == 1 && is_op(tmp2->next) == 0)
+				|| tmp2->next->type == PIPE)
 				return (printf("syntax error near unexpected token %s\n",
-						tmp->next->value),  g_last_exit_status = 2,1);
+						tmp2->next->value),  free_list2(tmp),g_last_exit_status = 2,1);
 		}
-		tmp = tmp->next;
+		tmp2 = tmp2->next;
 	}
+	// if (tmp22 != NULL) {
+    free_list2(tmp);
+    //     tmp22 = NULL;
+    // }
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: ael-maaz <ael-maaz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 20:33:02 by nhayoun           #+#    #+#             */
-/*   Updated: 2024/07/25 19:48:47 by ael-maaz         ###   ########.fr       */
+/*   Updated: 2024/07/26 20:31:54 by ael-maaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,6 +157,8 @@ void						bracket_util(char *str, int i, int j, int *opened);
 void						free_token(t_token *token);
 void						free_darr(char **arr);
 void free_all_family(t_family *head);
+void	free_list2(t_token *head);
+void	free_list(t_token *head, int flag);
 
 /* env functions */
 int							append_var(t_token *env_head, t_token *env_tail,
@@ -182,7 +184,7 @@ t_family					*new_family(int type);
 // and/or functions parsing parantheses
 
 void						level_checker(t_family *head);
-void						free_list(t_token *head);
+// void						free_list(t_token *head, int flag);
 
 /* Tree */
 t_family					*smallest_level(t_family *family_ll);

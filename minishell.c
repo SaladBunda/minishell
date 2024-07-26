@@ -6,7 +6,7 @@
 /*   By: ael-maaz <ael-maaz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 20:32:39 by nhayoun           #+#    #+#             */
-/*   Updated: 2024/07/25 19:55:53 by ael-maaz         ###   ########.fr       */
+/*   Updated: 2024/07/26 20:31:27 by ael-maaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,16 +60,17 @@ int	main(int ac, char **av, char **env)
 		family_head = parsing(cmd, env_ll);
 		if (!family_head)
 		{
+			printf("bruh\n");
 			free(cmd);
+			system("leaks -quiet minishell");
 			continue ;
 		}
 		free(cmd);
 		//sig_int();
 		execution(family_head, env_ll);
+		free_list(family_head->next->start, 1);
 		free_all_family(family_head);
-		// free_list(family_head->start);
 		system("leaks -quiet minishell");
-		// system("leaks -quiet minishell");
 	}
-	free_list(env_ll);
+	free_list(env_ll, 0);
 }

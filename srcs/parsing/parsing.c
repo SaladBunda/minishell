@@ -6,7 +6,7 @@
 /*   By: ael-maaz <ael-maaz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 20:32:27 by nhayoun           #+#    #+#             */
-/*   Updated: 2024/07/23 14:53:37 by ael-maaz         ###   ########.fr       */
+/*   Updated: 2024/07/26 20:32:08 by ael-maaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,18 +92,18 @@ void	free_family(t_family *head)
 	}
 }
 
-void	free_list(t_token *head)
-{
-	t_token	*tmp;
+// void	free_list(t_token *head)
+// {
+// 	t_token	*tmp;
 
-	while (head != NULL)
-	{
-		tmp = head;
-		head = head->next;
-		free(tmp->value);
-		free(tmp);
-	}
-}
+// 	while (head != NULL)
+// 	{
+// 		tmp = head;
+// 		head = head->next;
+// 		free(tmp->value);
+// 		free(tmp);
+// 	}
+// }
 
 t_family	*parsing(char *cmd, t_token *env)
 {
@@ -120,11 +120,11 @@ t_family	*parsing(char *cmd, t_token *env)
 	if (!tail)
 		return (NULL);
 	if (!brackets(cmd) || quotes(cmd))
-		return (free_list(head), NULL);
+		return (printf("returning\n"),free_list(head,0), NULL);
 	lexer(cmd, tail, &i);
 	joiner(head, env);
 	if (syntactic_tester(head) == 1)
-		return (free_list(head), NULL);
+		return (free_list(head,0), NULL);
 	family_head = create_family_ll(head);
 	organizer(family_head);
 	// fake_executionner(family_head, env);

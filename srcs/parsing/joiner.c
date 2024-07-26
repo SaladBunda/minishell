@@ -6,7 +6,7 @@
 /*   By: ael-maaz <ael-maaz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/02 11:56:22 by ael-maaz          #+#    #+#             */
-/*   Updated: 2024/07/23 10:46:14 by ael-maaz         ###   ########.fr       */
+/*   Updated: 2024/07/26 20:32:06 by ael-maaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -205,7 +205,7 @@ t_token	*nodes_detash(t_token *ptr, int to_detash, int flag)
 	detash_end->prev = new_node;
 	new_node->next = detash_end;
 	new_node->prev = detash_start;
-	free_list(ptr);
+	free_list(ptr, 0);
 	return (new_node);
 }
 
