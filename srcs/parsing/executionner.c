@@ -6,16 +6,16 @@
 /*   By: ael-maaz <ael-maaz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 11:57:31 by ael-maaz          #+#    #+#             */
-/*   Updated: 2024/07/23 15:05:55 by ael-maaz         ###   ########.fr       */
+/*   Updated: 2024/07/28 19:10:05 by ael-maaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-int	which_command(t_token *cmd, t_family *family_node, t_token *env)
+int	which_command(t_token *cmd, t_family *family_node, t_token *env, int flag)
 {
 	if (ft_fcmp(cmd->value, "cd") == 0)
-		cd_builtin(family_node, env);
+		cd_builtin(family_node, env, flag);
 	else if (ft_fcmp(cmd->value, "pwd") == 0)
 		pwd_builtin();
 	else if (ft_fcmp(cmd->value, "echo") == 0)
@@ -28,7 +28,7 @@ int	which_command(t_token *cmd, t_family *family_node, t_token *env)
 }
 
 
-int	fake_executionner(t_family *family_head, t_token *env)
+int	fake_executionner(t_family *family_head, t_token *env, int flag)
 {
 	t_family *tmp;
 	t_token *indexer;
@@ -42,7 +42,7 @@ int	fake_executionner(t_family *family_head, t_token *env)
 			while (indexer != tmp->end->next)
 			{
 				if (indexer->group == COMMAND)
-					return(which_command(indexer, tmp, env));
+					return(which_command(indexer, tmp, env, flag));
 				indexer = indexer->next;
 			}
 		}

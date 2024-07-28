@@ -6,7 +6,7 @@
 /*   By: ael-maaz <ael-maaz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 20:33:02 by nhayoun           #+#    #+#             */
-/*   Updated: 2024/07/28 10:53:39 by ael-maaz         ###   ########.fr       */
+/*   Updated: 2024/07/28 19:15:36 by ael-maaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -194,12 +194,12 @@ t_family					*smallest_level(t_family *family_ll);
 /*Built-In*/
 void						echo_builtin(t_family *cmd_row);
 void						pwd_builtin(void);
-void						cd_builtin(t_family *token, t_token *env);
+void						cd_builtin(t_family *token, t_token *env, int flag);
 int							variables_handler(t_token *env_list,
 								t_family *cmd_family);
 
 // executionner function
-int							fake_executionner(t_family *family, t_token *env);
+int							fake_executionner(t_family *family, t_token *env, int flag);
 int							handle_fds(t_family *head);
 void						handle_pipes(t_family *cmd_row, t_token *env);
 

@@ -6,7 +6,7 @@
 /*   By: ael-maaz <ael-maaz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 15:41:39 by nhayoun           #+#    #+#             */
-/*   Updated: 2024/07/28 18:21:51 by ael-maaz         ###   ########.fr       */
+/*   Updated: 2024/07/28 18:30:12 by ael-maaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ void	export_builtin(t_token *env_list, t_family *cmd_family)
 		i = 1;
 		while (args[i])
 		{
-			append_var(env_list, list_tail(env_list), ft_strdup(args[i]));
+			append_var(env_list, list_tail(env_list), args[i]);
 			i++;
 		}
 	}

@@ -6,7 +6,7 @@
 /*   By: ael-maaz <ael-maaz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 20:32:35 by nhayoun           #+#    #+#             */
-/*   Updated: 2024/07/28 10:53:46 by ael-maaz         ###   ########.fr       */
+/*   Updated: 2024/07/28 19:09:22 by ael-maaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -289,7 +289,7 @@ void	single_command(t_family *cmd, t_token *env, int i, int fork_id)
 		return ;
 	}
 	(i = -1, get_io_single(cmd));
-	if ((!cmd->cmd_path && !cmd->args) || fake_executionner(cmd, env) == 0)
+	if ((!cmd->cmd_path && !cmd->args) || fake_executionner(cmd, env, 0) == 0)
 	{
 		(close(cmd->in), close(cmd->out), dup2(in, STDIN_FILENO), close(in));
 		(dup2(out, STDOUT_FILENO), close(out));
@@ -297,12 +297,6 @@ void	single_command(t_family *cmd, t_token *env, int i, int fork_id)
 	}
 	signal(SIGINT, SIG_IGN);
 	signal(SIGQUIT, SIG_IGN);
-	// if (fake_executionner(cmd, env) == 0)
-	// {
-	// 	(close(cmd->in), close(cmd->out), dup2(in, STDIN_FILENO), close(in));
-	// 	(dup2(out, STDOUT_FILENO), close(out));
-	// 	return ;
-	// }
 	fork_id = fork();
 	if (fork_id == -1)
 		return ;

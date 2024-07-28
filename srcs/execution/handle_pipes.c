@@ -6,7 +6,7 @@
 /*   By: ael-maaz <ael-maaz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/19 17:05:45 by nhayoun           #+#    #+#             */
-/*   Updated: 2024/07/28 11:50:09 by ael-maaz         ###   ########.fr       */
+/*   Updated: 2024/07/28 19:09:32 by ael-maaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ void	process_cmd(t_family *cmd_row, t_token *env, int *fds, int pipes, int i,
 	close(saved);
 	close_fds(fds);
 	// dprintf(2, "path:%s\n",cmd_row->cmd_path/* ,cmd_row->args[0] */);
-	if((!cmd_row->cmd_path && !cmd_row->args) || fake_executionner(cmd_row, env) == 0)
+	if((!cmd_row->cmd_path && !cmd_row->args) || fake_executionner(cmd_row, env, 1) == 0)
 		exit(0);
 	else if (!cmd_row->cmd_path && cmd_row->args[0]!= '\0')
 		(dprintf(2,"minishell: %s: command not found\n",cmd_row->args[0]),g_last_exit_status = 127,exit(127));
@@ -100,7 +100,7 @@ void	process_cmd(t_family *cmd_row, t_token *env, int *fds, int pipes, int i,
 	// 	(g_last_exit_status = 0,exit(0));
 	if (execve(cmd_row->cmd_path, cmd_row->args, env_decompose(env)) == -1)
 		(g_last_exit_status = 1,perror("execve"));
-	exit(1);
+		exit(1);
 }
 
 void	handle_pipes(t_family *cmd_row, t_token *env)

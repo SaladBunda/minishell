@@ -6,7 +6,7 @@
 /*   By: ael-maaz <ael-maaz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 20:32:27 by nhayoun           #+#    #+#             */
-/*   Updated: 2024/07/28 16:05:32 by ael-maaz         ###   ########.fr       */
+/*   Updated: 2024/07/28 18:50:27 by ael-maaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,8 +130,8 @@ t_family	*parsing(char *cmd, t_token *env)
 	// fake_executionner(family_head, env);
 	extract_paths(family_head, env);
 	extract_files(family_head);
-	print_tokens(head);
-	print_family(family_head);
+	// print_tokens(head);
+	// print_family(family_head);
 	// free_list(head);
 	// free_family(family_head);
 	return (family_head);

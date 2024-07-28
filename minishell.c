@@ -6,7 +6,7 @@
 /*   By: ael-maaz <ael-maaz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 20:32:39 by nhayoun           #+#    #+#             */
-/*   Updated: 2024/07/28 16:48:19 by ael-maaz         ###   ########.fr       */
+/*   Updated: 2024/07/28 18:49:42 by ael-maaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,13 +38,18 @@ int	check_empty(char *str)
 	return (0);
 }
 
+void ll(void)
+{
+	system("leaks minishell");
+}
+
 int	main(int ac, char **av, char **env)
 {
 	char		*cmd;
 	t_token		*env_ll;
 	t_token		*tail;
 	t_family	*family_head;
-
+	// atexit(ll);
 	(void)ac;
 	(void)av;
 	env_ll = env_process(env, 0);
@@ -55,6 +60,7 @@ int	main(int ac, char **av, char **env)
 		cmd = readline("minishell$> ");
 		if(!cmd)
 		{
+			// system("leaks -quiet minishell");
 			exit(0);
 		}
 		if (check_empty(cmd) == 1)
@@ -72,10 +78,11 @@ int	main(int ac, char **av, char **env)
 		}
 		free(cmd);
 		execution(family_head, env_ll);
-		write(2,"finished execution\n",19);
 		free_list(family_head->next->start, 1);
 		free_all_family(family_head);
 		// system("leaks -quiet minishell");
 	}
 	free_list(env_ll, 0);
+	// system("leaks -quiet minishell");
+	
 }

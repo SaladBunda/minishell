@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_handlers.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nhayoun <nhayoun@student.1337.ma>          +#+  +:+       +#+        */
+/*   By: ael-maaz <ael-maaz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/02 15:17:10 by nhayoun           #+#    #+#             */
-/*   Updated: 2024/07/11 14:39:55 by nhayoun          ###   ########.fr       */
+/*   Updated: 2024/07/28 18:59:25 by ael-maaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,12 +77,12 @@ int	append_var(t_token *env_head, t_token *env_tail, char *export_var)
 	new_var = NULL;
 	(void)env_head;
 	if ((!ft_isalpha(export_var[0]) && export_var[0] != '_'))
-		return (printf("export: %s: not a valid identifier", export_var), 0);
+		return (printf("export: %s: not a valid identifier\n", export_var), 0);
 	if (ft_strchr(export_var, '='))
 	{
 		if (env_overwrite(env_tail, export_var))
 			return (1);
-		new_var = new_token(export_var, ENV);
+		new_var = new_token(ft_strdup(export_var), ENV);
 		append_token(env_tail, new_var);
 		return (1);
 	}
@@ -92,7 +92,7 @@ int	append_var(t_token *env_head, t_token *env_tail, char *export_var)
 			return (1);
 		else
 		{
-			new_var = new_token(export_var, ENV);
+			new_var = new_token(ft_strdup(export_var), ENV);
 			append_token(env_tail, new_var);
 		}
 	}

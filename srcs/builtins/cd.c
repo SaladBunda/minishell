@@ -6,7 +6,7 @@
 /*   By: ael-maaz <ael-maaz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 09:48:24 by ael-maaz          #+#    #+#             */
-/*   Updated: 2024/07/23 11:14:57 by ael-maaz         ###   ########.fr       */
+/*   Updated: 2024/07/28 19:22:31 by ael-maaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,12 +100,45 @@ void edit_env(t_token *env, char *old_path)
 	}
 }
 
-void	cd_builtin(t_family *token, t_token *env)
+void	cd_builtin_fork(t_family *token, t_token *env, int flag)
+{
+	(void) flag;
+	t_family *tmp;
+	char *old_path;
+	char oldpath[1024];
+	char *home;
+	tmp = token;
+	home = NULL;
+	getcwd(oldpath,1024);
+	old_path = ft_strdup(oldpath);
+	if(!token->args[1])
+	{
+		home = get_home(env);
+		if (home == NULL)
+			return (free(old_path), exit(1));
+		chdir(home);
+		edit_env(env, old_path);
+		free(old_path);
+		free(home);	
+	}
+	else
+	{
+		if (chdir(tmp->args[1]) != 0)
+			(printf("minishell: No such file or directory\n"), g_last_exit_status = 1,exit(1));
+		else
+			edit_env(env,old_path);
+		free(old_path);
+	}
+	exit(0);
+}
+void	cd_builtin(t_family *token, t_token *env, int flag)
 {
 	t_family *tmp;
 	char *old_path;
 	char oldpath[1024];
 	char *home;
+	if(flag == 1)
+		cd_builtin_fork(token,env,flag);
 	tmp = token;
 	home = NULL;
 	getcwd(oldpath,1024);

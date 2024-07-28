@@ -6,7 +6,7 @@
 /*   By: ael-maaz <ael-maaz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/02 15:20:18 by nhayoun           #+#    #+#             */
-/*   Updated: 2024/07/28 18:22:02 by ael-maaz         ###   ########.fr       */
+/*   Updated: 2024/07/28 18:39:58 by ael-maaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,8 +80,8 @@ void	free_darr(char **arr)
 		i++;
 	}
 	arr[i]= NULL;
-	// free(arr);
-	// arr=NULL;
+	free(arr);
+	arr=NULL;
 }
 
 void free_files(t_family *node)
