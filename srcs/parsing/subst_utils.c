@@ -6,7 +6,7 @@
 /*   By: ael-maaz <ael-maaz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 09:42:30 by ael-maaz          #+#    #+#             */
-/*   Updated: 2024/07/05 09:52:50 by ael-maaz         ###   ########.fr       */
+/*   Updated: 2024/07/28 12:14:55 by ael-maaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,4 +92,30 @@ char	*substitution(int *i, int *j, char *var, t_token *token)
 	while (l < new_len)
 		str[l++] = token->value[n++];
 	return (str[l] = '\0', free(token->value), str);
+}
+
+char	*substitution2(int *i, int *j, char *var, char *string)
+{
+	int		new_len;
+	char	*str;
+	int		l;
+	int		n;
+
+	n = *i + 1;
+	l = -1;
+	new_len = ft_strlen(string) - ((*i) - (*j) + 1) + ft_strlen(var);
+	str = malloc(sizeof(char) * (new_len + 1));
+	if (!str)
+		return (NULL);
+	while (++l < *j)
+		str[l] = string[l];
+	while (l - *j < (int)ft_strlen(var))
+	{
+		str[l] = var[l - *j];
+		l++;
+	}
+	*i = l - 1;
+	while (l < new_len)
+		str[l++] = string[n++];
+	return (str[l] = '\0',str);
 }

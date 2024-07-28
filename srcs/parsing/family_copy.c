@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   family_copy.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nhayoun <nhayoun@student.1337.ma>          +#+  +:+       +#+        */
+/*   By: ael-maaz <ael-maaz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 11:09:14 by nhayoun           #+#    #+#             */
-/*   Updated: 2024/07/19 18:22:15 by nhayoun          ###   ########.fr       */
+/*   Updated: 2024/07/28 18:10:27 by ael-maaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,7 @@ t_family	*new_family(int type)
 	new_family->cmd_path = NULL;
 	new_family->level = 0;
 	new_family->args = NULL;
+	new_family->files = NULL;
 	return (new_family);
 }
 

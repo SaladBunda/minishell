@@ -6,7 +6,7 @@
 /*   By: ael-maaz <ael-maaz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/02 11:56:22 by ael-maaz          #+#    #+#             */
-/*   Updated: 2024/07/26 20:32:06 by ael-maaz         ###   ########.fr       */
+/*   Updated: 2024/07/28 16:35:02 by ael-maaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,13 +46,13 @@ void	code_handler(t_token *dq_node)
 
 	i = 0;
 	j = 0;
-	itoa_len = ft_strlen(ft_itoa(g_last_exit_status));
+	code = ft_itoa(g_last_exit_status);
+	itoa_len = ft_strlen(code);
 	total_len = ft_strlen(dq_node->value);
 	nof_vars = nof_var(dq_node->value);
-	code = ft_itoa(g_last_exit_status);
 	new_len = total_len - (nof_vars * 2) + (itoa_len * nof_vars) + 1;
 	new_value = malloc(sizeof(char) * (new_len + 1));
-	 ft_memset((void *)new_value, 0, new_len);
+	ft_memset((void *)new_value, 0, new_len);
 	while (i < new_len)
 	{
 		if (dq_node->value[i] && dq_node->value[i+1] && dq_node->value[i] == '$'
@@ -71,6 +71,7 @@ void	code_handler(t_token *dq_node)
 	}
 	new_value[i] = '\0';
 	free(dq_node->value);
+	free(code);
 	dq_node->value = new_value;
 }
 

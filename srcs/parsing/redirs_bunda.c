@@ -6,7 +6,7 @@
 /*   By: ael-maaz <ael-maaz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/15 15:04:57 by ael-maaz          #+#    #+#             */
-/*   Updated: 2024/07/24 13:02:41 by ael-maaz         ###   ########.fr       */
+/*   Updated: 2024/07/28 12:05:12 by ael-maaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,6 +117,7 @@ char	*create_name_2(char *limiter,int i)
 	free_var = str;
 	number = ft_itoa(i);
 	str = ft_strjoin(str, number);
+	
 	free(number);
 	free(free_var);
 	free(str2);
@@ -170,7 +171,8 @@ void	extract_files(t_family *family_ll)
 		if (ittr_node->type == CMD_ROW)
 		{
 			file_count = count_files(ittr_node);
-			ittr_node->files = malloc((file_count + 1) * sizeof(t_files));
+			ittr_node->files = ft_calloc((file_count + 1) , sizeof(t_files));
+			ft_memset(ittr_node->files, 0, (file_count + 1));
 			tmp = ittr_node->start;
 			i = 0;
 			fill_files_array(ittr_node, tmp, ittr_node->end->next, &i);
@@ -181,18 +183,4 @@ void	extract_files(t_family *family_ll)
 		ittr_node = ittr_node->next;
 	}
 	change_name(family_ll);
-	ittr_node = family_ll->next;
-	while (ittr_node->type != E_CMD)
-	{
-		if (ittr_node->type == CMD_ROW)
-		{
-			i = 0;
-			while(ittr_node->files[i].path != NULL)
-			{
-				printf("paths:%s     limiter:%s\n",ittr_node->files[i].path,ittr_node->files[i].lim);
-				i++;
-			}
-		}
-		ittr_node = ittr_node->next;
-	}
 }

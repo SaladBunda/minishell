@@ -6,7 +6,7 @@
 /*   By: ael-maaz <ael-maaz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 15:41:39 by nhayoun           #+#    #+#             */
-/*   Updated: 2024/07/23 11:57:49 by ael-maaz         ###   ########.fr       */
+/*   Updated: 2024/07/28 18:21:51 by ael-maaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@ void	export_listing(t_token *env_list)
 	t_token	*current_var;
 	int		i;
 	char	*var_name;
-
 	current_var = env_list->next;
 	i = 0;
 	while (current_var->type != E_CMD)
@@ -25,7 +24,7 @@ void	export_listing(t_token *env_list)
 		printf("declare -x ");
 		if (current_var->value && !ft_strchr(current_var->value, '='))
 			printf("%s\n", current_var->value);
-		else
+		else		
 		{
 			i = 0;
 			while (current_var->value[i] && current_var->value[i] != '=')
@@ -41,34 +40,30 @@ void	export_listing(t_token *env_list)
 
 void	export_builtin(t_token *env_list, t_family *cmd_family)
 {
-	t_token	*current_token;
+	char **args;
+	int i;
 
-	current_token = cmd_family->start->next;
-	if (current_token->type == SPACE)
-		current_token = current_token->next;
-	if (current_token->type == PIPE
-		|| current_token->type == E_CMD)
-	{
+	i = 0;
+	args = cmd_family->args;
+	while (args[i])
+		i++;
+	if (i == 1)
 		export_listing(env_list);
-	}
 	else
 	{
-		while (current_token != cmd_family->end->next)
+		i = 1;
+		while (args[i])
 		{
-			if (current_token->type == SPACE)
-				current_token = current_token->next;
-			append_var(env_list, list_tail(env_list), current_token->value);
-			current_token = current_token->next;
+			append_var(env_list, list_tail(env_list), ft_strdup(args[i]));
+			i++;
 		}
 	}
 }
 
-void	env_builtin(t_token *env_list/* , t_family *cmd_family */)
+void	env_builtin(t_token *env_list /* , t_family *cmd_family */)
 {
 	t_token	*node;
 
-	// if (cmd_family->start != cmd_family->end)
-	// 	return ;
 	node = env_list->next;
 	while (node->type != E_CMD)
 	{
@@ -80,15 +75,15 @@ void	env_builtin(t_token *env_list/* , t_family *cmd_family */)
 
 void	unset_builtin(t_token *env_list, t_family *cmd_family)
 {
-	t_token	*current_token;
+	char	**args;
+	int		i;
 
-	current_token = cmd_family->start->next;
-	while (current_token != cmd_family->end->next)
+	i = 1;
+	args = cmd_family->args;
+	while (args[i])
 	{
-		if (current_token->type == SPACE)
-			current_token = current_token->next;
-		delete_var(env_list, current_token->value);
-		current_token = current_token->next;
+		delete_var(env_list, args[i]);
+		i++;
 	}
 }
 
@@ -102,7 +97,7 @@ int	variables_handler(t_token *env_list, t_family *cmd_family)
 	else if (ft_fcmp(builtin->value, "export") == 0)
 		export_builtin(env_list, cmd_family);
 	else if (ft_fcmp(builtin->value, "env") == 0)
-		env_builtin(env_list/* , cmd_family */);
+		env_builtin(env_list /* , cmd_family */);
 	else
 		return (1);
 	return (0);

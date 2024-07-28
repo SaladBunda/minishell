@@ -6,7 +6,7 @@
 /*   By: ael-maaz <ael-maaz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 20:33:02 by nhayoun           #+#    #+#             */
-/*   Updated: 2024/07/26 20:31:54 by ael-maaz         ###   ########.fr       */
+/*   Updated: 2024/07/28 10:53:39 by ael-maaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
+# include <limits.h>
 
 # define CMD_ROW 100
 # define AND_ROW 200
@@ -174,6 +175,7 @@ char						*search_replace(char *str, int start, int end,
 								t_token *env);
 char						*substitution(int *i, int *j, char *var,
 								t_token *token);
+char	*substitution2(int *i, int *j, char *var, char *string);
 void						var_name(char *cmd, int *index, int state);
 
 // family functions
@@ -221,5 +223,9 @@ t_token						*space_free(t_token *list);
 void						print_args(t_family *head);
 
 void						signal_handler(void);
+
+void	sigquit_reset(int sig);
+void						signals_init(void);
+void						here_sig(int sig);
 
 #endif

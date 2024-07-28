@@ -6,7 +6,7 @@
 /*   By: ael-maaz <ael-maaz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/19 17:05:45 by nhayoun           #+#    #+#             */
-/*   Updated: 2024/07/23 20:51:01 by ael-maaz         ###   ########.fr       */
+/*   Updated: 2024/07/28 11:50:09 by ael-maaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,10 +69,11 @@ void	save_pipe(int *prev_fd, int *fds)
 void	process_cmd(t_family *cmd_row, t_token *env, int *fds, int pipes, int i,
 		int __unused prev_fd, int saved)
 {
+	pid_t	last_child_pid;
+
+	last_child_pid = -1;
 	if (i == 0)
-	{
 		dup2(fds[1], STDOUT_FILENO);
-	}
 	else if (i == pipes - 1)
 	{
 		if (saved != -1)
@@ -91,9 +92,7 @@ void	process_cmd(t_family *cmd_row, t_token *env, int *fds, int pipes, int i,
 	close(saved);
 	close_fds(fds);
 	// dprintf(2, "path:%s\n",cmd_row->cmd_path/* ,cmd_row->args[0] */);
-	if(!cmd_row->cmd_path && !cmd_row->args)
-		exit(0);
-	if (fake_executionner(cmd_row, env) == 0)
+	if((!cmd_row->cmd_path && !cmd_row->args) || fake_executionner(cmd_row, env) == 0)
 		exit(0);
 	else if (!cmd_row->cmd_path && cmd_row->args[0]!= '\0')
 		(dprintf(2,"minishell: %s: command not found\n",cmd_row->args[0]),g_last_exit_status = 127,exit(127));
@@ -109,11 +108,12 @@ void	handle_pipes(t_family *cmd_row, t_token *env)
 	t_family *ittr_node;
 	int i;
 	int pipes;
-	pid_t ps;
+	// pid_t ps;
 	int fds[2];
 	int status = 0;
 	int prev_fd = 0;
 	int saved = -1;
+	pid_t pss[ARG_MAX];
 
 	pipes = nof_pipes(cmd_row);
 	ittr_node = cmd_row->next;
@@ -123,21 +123,26 @@ void	handle_pipes(t_family *cmd_row, t_token *env)
 		if (ittr_node->type == CMD_ROW)
 		{
 			pipe(fds);
-			ps = fork();
-			if (!ps)
+			signal(SIGINT, SIG_IGN);
+			signal(SIGQUIT, SIG_IGN);
+			pss[i] = fork();
+			if (!pss[i])
 			{
-				handle_fds(ittr_node);
+				signal(SIGINT, SIG_DFL);
+				signal(SIGQUIT, sigquit_reset);
+				if(handle_fds(ittr_node) == 1)
+					(g_last_exit_status = 1,exit(1));
 				get_io(ittr_node);
 				process_cmd(ittr_node, env, fds, pipes, i, prev_fd, saved);
 			}
-			else if (ps < 0)
+			else if (pss[i] < 0)
 				status = -1;
 			else
 			{
-				if (waitpid(ps, &status, 0) != ps)
-					status = -1;
-				else if (WIFEXITED(status))
-					status = WEXITSTATUS(status);
+				// if (waitpid(ps, &status, 0) != ps)
+				// 	status = -1;
+				// else if (WIFEXITED(status))
+				// 	status = WEXITSTATUS(status);
 				close(saved);
 				// if (saved == -1)
 				saved = fds[0];
@@ -152,8 +157,24 @@ void	handle_pipes(t_family *cmd_row, t_token *env)
 		}
 		ittr_node = ittr_node->next;
 	}
-	g_last_exit_status = status;
+	// g_last_exit_status = status;
+	// if (WIFEXITED(status))
+	// 	g_last_exit_status = WEXITSTATUS(status);
+	// if (WIFSIGNALED(status))
+	// 	g_last_exit_status = WEXITSTATUS(status);
+	// close_fds(fds);
+	// close(saved);
+	// while(wait(NULL) > 0);
+	i = 0;
+	while (i < pipes)
+	{
+		waitpid(pss[i], &status, 0);
+		if (WIFEXITED(status))
+			g_last_exit_status = WEXITSTATUS(status);
+		if (WIFSIGNALED(status))
+			g_last_exit_status = WTERMSIG(status) + 128;
+		i++;
+	}
 	close_fds(fds);
 	close(saved);
-	// while(wait(NULL) > 0);
 }

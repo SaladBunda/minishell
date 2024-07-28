@@ -29,7 +29,7 @@ PARS_OBJS = $(SRCS_PARS:.c=.o)
 EXEC_OBJS = $(SRCS_EXEC:.c=.o)
 LIBFT = libft.a
 NAME = minishell
-# FS=-fsanitize=address -g
+FS=-fsanitize=address -g
 
 all: $(LIBFT) $(NAME)
 

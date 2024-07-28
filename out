@@ -1,7 +1,5 @@
 Makefile
-Makeso
 Notes
-bunda
 en.subject.pdf
 include
 libft
@@ -10,5 +8,4 @@ minishell
 minishell.c
 minishell.dSYM
 out
-output
 srcs

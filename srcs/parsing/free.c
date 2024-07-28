@@ -6,7 +6,7 @@
 /*   By: ael-maaz <ael-maaz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/02 15:20:18 by nhayoun           #+#    #+#             */
-/*   Updated: 2024/07/26 20:33:07 by ael-maaz         ###   ########.fr       */
+/*   Updated: 2024/07/28 18:22:02 by ael-maaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,9 +76,12 @@ void	free_darr(char **arr)
 	while (arr[i])
 	{
 		free(arr[i]);
+		arr[i] = NULL;
 		i++;
 	}
-	free(arr);
+	arr[i]= NULL;
+	// free(arr);
+	// arr=NULL;
 }
 
 void free_files(t_family *node)
@@ -90,6 +93,8 @@ void free_files(t_family *node)
 		{
 			free(node->files[i].lim);
 			free(node->files[i].path);
+			if(node->files[i].fd > 0)
+				close(node->files[i].fd);
 			i++;
 		}
 		free(node->files);
@@ -106,7 +111,7 @@ void free_family_node(t_family *node)
 		free(node->last_outfile);
 	if(node->args)
 		free_darr(node->args);
-	if(node->type != PIPE_ROW)
+	if(node->type  != PIPE_ROW && node->type!= S_CMD)
 		free_files(node);
 	node->start = NULL;
 	node->end = NULL;
@@ -129,6 +134,5 @@ void free_all_family(t_family *head)
 		free_family_node(tmp);
 		tmp=next;
 	}
-
-	free(tmp);
+	free_family_node(tmp);
 }

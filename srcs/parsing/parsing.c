@@ -6,7 +6,7 @@
 /*   By: ael-maaz <ael-maaz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 20:32:27 by nhayoun           #+#    #+#             */
-/*   Updated: 2024/07/26 20:32:08 by ael-maaz         ###   ########.fr       */
+/*   Updated: 2024/07/28 16:05:32 by ael-maaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,7 +120,7 @@ t_family	*parsing(char *cmd, t_token *env)
 	if (!tail)
 		return (NULL);
 	if (!brackets(cmd) || quotes(cmd))
-		return (printf("returning\n"),free_list(head,0), NULL);
+		return (free_list(head,0), NULL);
 	lexer(cmd, tail, &i);
 	joiner(head, env);
 	if (syntactic_tester(head) == 1)
@@ -128,10 +128,10 @@ t_family	*parsing(char *cmd, t_token *env)
 	family_head = create_family_ll(head);
 	organizer(family_head);
 	// fake_executionner(family_head, env);
-	// print_tokens(head);
 	extract_paths(family_head, env);
 	extract_files(family_head);
-	// print_family(family_head);
+	print_tokens(head);
+	print_family(family_head);
 	// free_list(head);
 	// free_family(family_head);
 	return (family_head);
