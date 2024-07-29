@@ -6,7 +6,7 @@
 /*   By: ael-maaz <ael-maaz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/19 17:05:45 by nhayoun           #+#    #+#             */
-/*   Updated: 2024/07/28 19:09:32 by ael-maaz         ###   ########.fr       */
+/*   Updated: 2024/07/29 16:51:03 by ael-maaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,9 +91,12 @@ void	process_cmd(t_family *cmd_row, t_token *env, int *fds, int pipes, int i,
 		(dup2(cmd_row->out, STDOUT_FILENO), close(cmd_row->out));
 	close(saved);
 	close_fds(fds);
-	// dprintf(2, "path:%s\n",cmd_row->cmd_path/* ,cmd_row->args[0] */);
 	if((!cmd_row->cmd_path && !cmd_row->args) || fake_executionner(cmd_row, env, 1) == 0)
-		exit(0);
+		exit(g_last_exit_status);
+	else if(cmd_row->args && cmd_row->args[0] && cmd_row->args[0][0] == '\0')
+			exit(0);
+	else if (!cmd_row->cmd_path && cmd_row->args[0]!= '\0' && cmd_row->args[0][0]== '/')
+		(dprintf(2,"minishell: no such file or directory: %s\n",cmd_row->args[0]),g_last_exit_status = 127,exit(127));
 	else if (!cmd_row->cmd_path && cmd_row->args[0]!= '\0')
 		(dprintf(2,"minishell: %s: command not found\n",cmd_row->args[0]),g_last_exit_status = 127,exit(127));
 	// else if (cmd_row->cmd_path && cmd_row->args[0] == '\0')

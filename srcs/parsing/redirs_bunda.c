@@ -6,7 +6,7 @@
 /*   By: ael-maaz <ael-maaz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/15 15:04:57 by ael-maaz          #+#    #+#             */
-/*   Updated: 2024/07/28 12:05:12 by ael-maaz         ###   ########.fr       */
+/*   Updated: 2024/07/29 10:55:16 by ael-maaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -172,11 +172,10 @@ void	extract_files(t_family *family_ll)
 		{
 			file_count = count_files(ittr_node);
 			ittr_node->files = ft_calloc((file_count + 1) , sizeof(t_files));
-			ft_memset(ittr_node->files, 0, (file_count + 1));
+			ft_memset(ittr_node->files, -1, (file_count + 1));
 			tmp = ittr_node->start;
 			i = 0;
 			fill_files_array(ittr_node, tmp, ittr_node->end->next, &i);
-			
 			ittr_node->files[i].path = NULL;
 			last_io(ittr_node);
 		}

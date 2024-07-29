@@ -21,7 +21,8 @@ SRCS_PARS = ./srcs/parsing/parsing.c \
 ./srcs/parsing/command.c \
 ./srcs/parsing/redirs_bunda.c \
 ./srcs/execution/handle_pipes.c \
-./srcs/execution/signals.c
+./srcs/execution/signals.c \
+./srcs/parsing/wildcards.c
 SRCS_EXEC = ./srcs/execution/execution.c
 ENTRY = minishell.c
 INCLUDE = ./include/

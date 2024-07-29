@@ -6,7 +6,7 @@
 /*   By: ael-maaz <ael-maaz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 09:48:24 by ael-maaz          #+#    #+#             */
-/*   Updated: 2024/07/28 19:22:31 by ael-maaz         ###   ########.fr       */
+/*   Updated: 2024/07/29 10:04:47 by ael-maaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,8 +137,9 @@ void	cd_builtin(t_family *token, t_token *env, int flag)
 	char *old_path;
 	char oldpath[1024];
 	char *home;
-	if(flag == 1)
-		cd_builtin_fork(token,env,flag);
+	(void)flag;
+	// if(flag == 1)
+	// 	cd_builtin_fork(token,env,flag);
 	tmp = token;
 	home = NULL;
 	getcwd(oldpath,1024);

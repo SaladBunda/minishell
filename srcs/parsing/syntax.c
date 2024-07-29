@@ -6,7 +6,7 @@
 /*   By: ael-maaz <ael-maaz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 15:06:46 by ael-maaz          #+#    #+#             */
-/*   Updated: 2024/07/27 11:36:05 by ael-maaz         ###   ########.fr       */
+/*   Updated: 2024/07/29 12:29:15 by ael-maaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,13 +29,13 @@ int	not_string(t_token *t)
 	return (0);
 }
 
-int	is_string(t_token *t)
-{
-	if (t->type == VAR || t->type == DQUOTE || t->type == SQUOTE
-		|| t->type == STR)
-		return (1);
-	return (0);
-}
+// int	is_string(t_token *t)
+// {
+// 	if (t->type == VAR || t->type == DQUOTE || t->type == SQUOTE
+// 		|| t->type == STR)
+// 		return (1);
+// 	return (0);
+// }
 
 int	syntactic_tester(t_token *head)
 {

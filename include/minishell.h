@@ -6,7 +6,7 @@
 /*   By: ael-maaz <ael-maaz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 20:33:02 by nhayoun           #+#    #+#             */
-/*   Updated: 2024/07/28 19:15:36 by ael-maaz         ###   ########.fr       */
+/*   Updated: 2024/07/29 16:15:38 by ael-maaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 # include <stdlib.h>
 # include <unistd.h>
 # include <limits.h>
+# include <dirent.h>
 
 # define CMD_ROW 100
 # define AND_ROW 200
@@ -157,9 +158,9 @@ void						bracket_util(char *str, int i, int j, int *opened);
 /* Free Functions */
 void						free_token(t_token *token);
 void						free_darr(char **arr);
-void free_all_family(t_family *head);
-void	free_list2(t_token *head);
-void	free_list(t_token *head, int flag);
+void						free_all_family(t_family *head);
+void						free_list2(t_token *head);
+void						free_list(t_token *head, int flag);
 
 /* env functions */
 int							append_var(t_token *env_head, t_token *env_tail,
@@ -224,8 +225,12 @@ void						print_args(t_family *head);
 
 void						signal_handler(void);
 
-void	sigquit_reset(int sig);
+void						sigquit_reset(int sig);
 void						signals_init(void);
 void						here_sig(int sig);
+
+//wildcards
+void wildcard_sub(t_token *head, t_token *env);
+int	is_string(t_token *t);
 
 #endif

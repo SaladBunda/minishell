@@ -6,11 +6,13 @@
 /*   By: ael-maaz <ael-maaz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/02 15:17:10 by nhayoun           #+#    #+#             */
-/*   Updated: 2024/07/28 18:59:25 by ael-maaz         ###   ########.fr       */
+/*   Updated: 2024/07/29 10:23:21 by ael-maaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
+
+extern int g_last_exit_status;
 
 int	delete_var(t_token *env_head, char *unset_var)
 {
@@ -18,7 +20,7 @@ int	delete_var(t_token *env_head, char *unset_var)
 	char	**current_var;
 
 	if (unset_var[0] != '_' && !ft_isalpha(unset_var[0]))
-		return (0);
+		return (write(2,"unset: ",8),write(2, unset_var,ft_strlen(unset_var)),write(2,": invalid parameter name\n",26),0);
 	matched = env_head->next;
 	while (matched && matched->value)
 	{
@@ -77,7 +79,7 @@ int	append_var(t_token *env_head, t_token *env_tail, char *export_var)
 	new_var = NULL;
 	(void)env_head;
 	if ((!ft_isalpha(export_var[0]) && export_var[0] != '_'))
-		return (printf("export: %s: not a valid identifier\n", export_var), 0);
+		return (printf("export: %s: not a valid identifier\n", export_var),g_last_exit_status = 1, 0);
 	if (ft_strchr(export_var, '='))
 	{
 		if (env_overwrite(env_tail, export_var))

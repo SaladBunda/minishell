@@ -6,7 +6,7 @@
 /*   By: ael-maaz <ael-maaz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/02 11:56:22 by ael-maaz          #+#    #+#             */
-/*   Updated: 2024/07/28 16:35:02 by ael-maaz         ###   ########.fr       */
+/*   Updated: 2024/07/29 11:58:10 by ael-maaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -241,6 +241,7 @@ void	token_merger(t_token *head)
 void	joiner(t_token *head, t_token *env)
 {
 	var_substitutionner(head, env);
+	wildcard_sub(head, env);
 	// replaces variables with their values from env and also inside double quotes
 	token_merger(head);
 }

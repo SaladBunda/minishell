@@ -6,7 +6,7 @@
 /*   By: ael-maaz <ael-maaz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 20:32:35 by nhayoun           #+#    #+#             */
-/*   Updated: 2024/07/28 19:09:22 by ael-maaz         ###   ########.fr       */
+/*   Updated: 2024/07/29 16:45:14 by ael-maaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,27 +74,6 @@ int	handle_fds(t_family *head)
 	}
 	return (0);
 }
-
-// char	*create_name(char *limiter)
-// {
-// 	char	*str;
-// 	char	*str2;
-// 	char	*free_var;
-// 	int		i;
-
-// 	str = "/tmp/";
-// 	str2 = ft_strjoin(".", limiter);
-// 	str = ft_strjoin(str, str2);
-// 	i = 0;
-// 	while (access(str, F_OK) == 0)
-// 	{
-// 		free_var = str;
-// 		str = ft_strjoin(str, ft_itoa(i));
-// 		free(free_var);
-// 		i++;
-// 	}
-// 	return (str);
-// }
 
 void	heredoc_sigg(int sig)
 {
@@ -306,6 +285,10 @@ void	single_command(t_family *cmd, t_token *env, int i, int fork_id)
 		signal(SIGQUIT, sigquit_reset);
 		if (!cmd->cmd_path && !cmd->args)
 			exit(0);
+		else if(cmd->args && cmd->args[0] && cmd->args[0][0] == '\0')
+			exit(0);
+		else if (!cmd->cmd_path && cmd->args[0]!= '\0' && (cmd->args[0][0]== '/'|| (cmd->args[0][0] == '.' && cmd->args[0][1])))
+		(dprintf(2,"minishell: no such file or directory: %s\n",cmd->args[0]),g_last_exit_status = 127,exit(127));
 		else if (!cmd->cmd_path && cmd->args[0])
 			(dprintf(2, "minishell: %s: command not found\n", cmd->args[0]),
 				g_last_exit_status = 127,exit(127));

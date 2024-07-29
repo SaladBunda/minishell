@@ -6,7 +6,7 @@
 /*   By: ael-maaz <ael-maaz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 11:15:52 by ael-maaz          #+#    #+#             */
-/*   Updated: 2024/07/13 12:52:38 by ael-maaz         ###   ########.fr       */
+/*   Updated: 2024/07/29 12:28:42 by ael-maaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ static int	is_operator(t_token *t)
 	return (0);
 }
 
-static int	is_string(t_token *t)
+ int	is_string(t_token *t)
 {
 	if (t->type == VAR || t->type == DQUOTE || t->type == SQUOTE
 		|| t->type == STR)

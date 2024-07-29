@@ -6,7 +6,7 @@
 /*   By: ael-maaz <ael-maaz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 16:17:39 by ael-maaz          #+#    #+#             */
-/*   Updated: 2024/07/27 11:49:22 by ael-maaz         ###   ########.fr       */
+/*   Updated: 2024/07/29 16:50:17 by ael-maaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,7 +117,7 @@ void treat_path(t_family *token, t_token *env)
 	free(path_var);
 	if(!path_array)
 		return ;
-	if(access(token->cmd_path, X_OK) == 0)
+	if(access(token->cmd_path, F_OK) == 0)
 	{
 		free_darr(path_array);
 		return ;
@@ -125,11 +125,12 @@ void treat_path(t_family *token, t_token *env)
 	while(path_array[++i])
 	{
 		joined = ft_strjoin_cmd(path_array[i], tmp);
-		if(access(joined, R_OK) == 0)
+		if(access(joined, X_OK) == 0)
 		{
 			token->cmd_path = joined;
 			free_darr(path_array);
 			free(tmp);
+			printf("path:%s\n", token->cmd_path);
 			return ;
 		}
 		free(joined);
