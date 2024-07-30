@@ -6,7 +6,7 @@
 /*   By: ael-maaz <ael-maaz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 20:32:35 by nhayoun           #+#    #+#             */
-/*   Updated: 2024/07/29 16:45:14 by ael-maaz         ###   ########.fr       */
+/*   Updated: 2024/07/30 10:35:31 by ael-maaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 
 extern int g_last_exit_status;
 
-int	test_var_file(t_files file)
+int test_var_file(t_files file)
 {
-	int	i;
+	int i;
 
 	i = 0;
 	if (file.is_var == 4)
@@ -40,10 +40,10 @@ int	test_var_file(t_files file)
 	return (0);
 }
 
-int	handle_fds(t_family *head)
+int handle_fds(t_family *head)
 {
-	int			i;
-	t_family	*tmp;
+	int i;
+	t_family *tmp;
 
 	i = -1;
 	tmp = head;
@@ -53,12 +53,12 @@ int	handle_fds(t_family *head)
 		{
 			if (tmp->files[i].type == APPEND)
 				tmp->files[i].fd = open(tmp->files[i].path,
-						O_CREAT | O_APPEND | O_WRONLY, 0644);
+										O_CREAT | O_APPEND | O_WRONLY, 0644);
 			if (tmp->files[i].type == LESS)
 				tmp->files[i].fd = open(tmp->files[i].path, O_RDONLY);
 			if (tmp->files[i].type == GREAT)
 				tmp->files[i].fd = open(tmp->files[i].path,
-						O_CREAT | O_TRUNC | O_WRONLY, 0644);
+										O_CREAT | O_TRUNC | O_WRONLY, 0644);
 			if (tmp->files[i].fd < 0)
 			{
 				perror("minishell_fd");
@@ -68,24 +68,24 @@ int	handle_fds(t_family *head)
 		else
 		{
 			// printf("ambiguious redirect\n");
-			write(2,"ambigiuous redirect\n",20);
+			write(2, "ambigiuous redirect\n", 20);
 			return (1);
 		}
 	}
 	return (0);
 }
 
-void	heredoc_sigg(int sig)
+void heredoc_sigg(int sig)
 {
 	(void)sig;
 	printf("\n");
 	exit(1);
 }
 
-int	nof_var2(char *value)
+int nof_var2(char *value)
 {
-	int	i;
-	int	number;
+	int i;
+	int number;
 
 	i = 0;
 	number = 0;
@@ -101,16 +101,16 @@ int	nof_var2(char *value)
 	return (number);
 }
 
-void	code_handler2(char **string)
+void code_handler2(char **string)
 {
-	int		total_len;
-	int		itoa_len;
-	int		nof_vars;
-	int		new_len;
-	char	*code;
-	char	*new_value;
-	int		i;
-	int		j;
+	int total_len;
+	int itoa_len;
+	int nof_vars;
+	int new_len;
+	char *code;
+	char *new_value;
+	int i;
+	int j;
 
 	i = 0;
 	j = 0;
@@ -120,11 +120,10 @@ void	code_handler2(char **string)
 	code = ft_itoa(g_last_exit_status);
 	new_len = total_len - (nof_vars * 2) + (itoa_len * nof_vars) + 1;
 	new_value = malloc(sizeof(char) * (new_len + 1));
-	 ft_memset((void *)new_value, 0, new_len);
+	ft_memset((void *)new_value, 0, new_len);
 	while (i < new_len)
 	{
-		if ((*string)[i] && (*string)[i+1] && (*string)[i] == '$'
-			&& (*string)[i + 1] == '?')
+		if ((*string)[i] && (*string)[i + 1] && (*string)[i] == '$' && (*string)[i + 1] == '?')
 		{
 			ft_memcpy(new_value + j, (void *)code, itoa_len);
 			i += 2;
@@ -142,9 +141,9 @@ void	code_handler2(char **string)
 	(*string) = new_value;
 }
 
-int	expand_line(t_token *env, char **str, int i, int j)
+int expand_line(t_token *env, char **str, int i, int j)
 {
-	char	*var_value;
+	char *var_value;
 
 	while (str[++i])
 	{
@@ -153,7 +152,7 @@ int	expand_line(t_token *env, char **str, int i, int j)
 			if ((*str)[i + 1] && (*str)[i + 1] == '?')
 			{
 				code_handler2(str);
-				break ;
+				break;
 			}
 			j = i;
 			var_name(*str, &i, 0);
@@ -168,20 +167,20 @@ int	expand_line(t_token *env, char **str, int i, int j)
 	return (0);
 }
 
-void	here_handle(t_files *file, t_token *env)
+void here_handle(t_files *file, t_token *env)
 {
-	t_files	*tmp;
-	char	*line;
-	int		result;
-	char	*str;
+	t_files *tmp;
+	char *line;
+	int result;
+	char *str;
 
 	int fork_id;
 	tmp = file;
 	signal(SIGINT, SIG_IGN);
 	fork_id = fork();
-	if(fork_id == -1)
-		return ;
-	if(fork_id == 0)
+	if (fork_id == -1)
+		return;
+	if (fork_id == 0)
 	{
 		tmp->fd = open(tmp->path, O_CREAT | O_TRUNC | O_RDWR, 0644);
 		signal(SIGINT, SIG_IGN);
@@ -191,23 +190,23 @@ void	here_handle(t_files *file, t_token *env)
 			line = get_next_line(0);
 			str = ft_strjoin_gnl(tmp->lim, "\n");
 			if (!line)
-				break ;
+				break;
 			result = ft_fcmp(line, str);
 			if (result == 0)
-				break ;
-			if(tmp->is_var == 2)
+				break;
+			if (tmp->is_var == 2)
 				expand_line(env, &line, -1, 0);
-			(write(tmp->fd, line, ft_strlen(line)), free(line),free(str));
+			(write(tmp->fd, line, ft_strlen(line)), free(line), free(str));
 		}
-		(close(tmp->fd),exit(0));
+		(close(tmp->fd), exit(0));
 	}
 	wait(NULL);
 }
 
-void	handle_heredocs(t_family *head, t_token *env)
+void handle_heredocs(t_family *head, t_token *env)
 {
-	t_family	*tmp;
-	int			i;
+	t_family *tmp;
+	int i;
 
 	tmp = head;
 	while (tmp->type != E_CMD)
@@ -219,7 +218,7 @@ void	handle_heredocs(t_family *head, t_token *env)
 			{
 				if (tmp->files[i].type == HEREDOC)
 				{
-					here_handle(&tmp->files[i],env);
+					here_handle(&tmp->files[i], env);
 					tmp->files[i].fd = open(tmp->files[i].path, O_RDONLY);
 				}
 				i++;
@@ -229,10 +228,10 @@ void	handle_heredocs(t_family *head, t_token *env)
 	}
 }
 
-void	get_io_single(t_family *cmd_row)
+void get_io_single(t_family *cmd_row)
 {
-	t_family	*tmp;
-	int			i;
+	t_family *tmp;
+	int i;
 
 	i = 0;
 	tmp = cmd_row;
@@ -242,20 +241,59 @@ void	get_io_single(t_family *cmd_row)
 	while (tmp->files[i].path)
 	{
 		if (tmp->last_infile && ft_fcmp(tmp->files[i].lim,
-				tmp->last_infile) == 0)
+										tmp->last_infile) == 0)
 			(tmp->in = tmp->files[i].fd, dup2(tmp->in, STDIN_FILENO));
 		if (tmp->last_outfile && ft_fcmp(tmp->files[i].lim,
-				tmp->last_outfile) == 0)
+										 tmp->last_outfile) == 0)
 			(tmp->out = tmp->files[i].fd, dup2(tmp->out, STDOUT_FILENO));
 		i++;
 	}
 }
 
-void	single_command(t_family *cmd, t_token *env, int i, int fork_id)
+#include <sys/stat.h>
+
+void handle_errors(t_family *cmd)
 {
-	int		in;
-	int		out;
-	char	**env_arr;
+	struct stat path_stat;
+
+	// Get the status of the path
+	if (stat(cmd->args[0], &path_stat) == -1)
+	{
+		perror("stat");
+		// exit(EXIT_FAILURE);
+	}
+
+	// Check if the path is a directory
+	if (S_ISDIR(path_stat.st_mode))
+	{
+		printf("The path '%s' is a directory.\n", cmd->args[0]);
+	}
+	// Check if the path is a regular file
+	else if (S_ISREG(path_stat.st_mode))
+	{
+		printf("The path '%s' is a regular file.\n", cmd->args[0]);
+	}
+	else
+	{
+		printf("The path '%s' is neither a regular file nor a directory.\n", cmd->args[0]);
+	}
+
+	if (!cmd->cmd_path && !cmd->args)
+		exit(0);
+	// else if(cmd->args && cmd->args[0] && cmd->args[0][0] == '\0')
+	// 	exit(0);
+	else if (!cmd->cmd_path && cmd->args[0] != '\0' && (cmd->args[0][0] == '/' || (cmd->args[0][0] == '.' && cmd->args[0][1])))
+		(dprintf(2, "minishell: no such file or directory: %s\n", cmd->args[0]), g_last_exit_status = 127, exit(127));
+	else if (!cmd->cmd_path && cmd->args[0])
+		(dprintf(2, "minishell: %s: command not found\n", cmd->args[0]),
+		 g_last_exit_status = 127, exit(127));
+}
+
+void single_command(t_family *cmd, t_token *env, int i, int fork_id)
+{
+	int in;
+	int out;
+	char **env_arr;
 	int status;
 
 	in = -1;
@@ -265,33 +303,34 @@ void	single_command(t_family *cmd, t_token *env, int i, int fork_id)
 	{
 		close(in);
 		close(out);
-		return ;
+		return;
 	}
 	(i = -1, get_io_single(cmd));
 	if ((!cmd->cmd_path && !cmd->args) || fake_executionner(cmd, env, 0) == 0)
 	{
 		(close(cmd->in), close(cmd->out), dup2(in, STDIN_FILENO), close(in));
 		(dup2(out, STDOUT_FILENO), close(out));
-		return ;
+		return;
 	}
 	signal(SIGINT, SIG_IGN);
 	signal(SIGQUIT, SIG_IGN);
 	fork_id = fork();
 	if (fork_id == -1)
-		return ;
+		return;
 	if (fork_id == 0)
 	{
 		signal(SIGINT, SIG_DFL);
 		signal(SIGQUIT, sigquit_reset);
-		if (!cmd->cmd_path && !cmd->args)
-			exit(0);
-		else if(cmd->args && cmd->args[0] && cmd->args[0][0] == '\0')
-			exit(0);
-		else if (!cmd->cmd_path && cmd->args[0]!= '\0' && (cmd->args[0][0]== '/'|| (cmd->args[0][0] == '.' && cmd->args[0][1])))
-		(dprintf(2,"minishell: no such file or directory: %s\n",cmd->args[0]),g_last_exit_status = 127,exit(127));
-		else if (!cmd->cmd_path && cmd->args[0])
-			(dprintf(2, "minishell: %s: command not found\n", cmd->args[0]),
-				g_last_exit_status = 127,exit(127));
+		// if (!cmd->cmd_path && !cmd->args)
+		// 	exit(0);
+		// // else if(cmd->args && cmd->args[0] && cmd->args[0][0] == '\0')
+		// // 	exit(0);
+		// else if (!cmd->cmd_path && cmd->args[0]!= '\0' && (cmd->args[0][0]== '/'|| (cmd->args[0][0] == '.' && cmd->args[0][1])))
+		// (dprintf(2,"minishell: no such file or directory: %s\n",cmd->args[0]),g_last_exit_status = 127,exit(127));
+		// else if (!cmd->cmd_path && cmd->args[0])
+		// 	(dprintf(2, "minishell: %s: command not found\n", cmd->args[0]),
+		// 		g_last_exit_status = 127,exit(127));
+		handle_errors(cmd);
 		env_arr = env_decompose(env);
 		execve(cmd->cmd_path, cmd->args, env_arr);
 		perror("execve");
@@ -306,10 +345,10 @@ void	single_command(t_family *cmd, t_token *env, int i, int fork_id)
 		g_last_exit_status = WTERMSIG(status) + 128;
 }
 
-void	execution(t_family *head, t_token *env)
+void execution(t_family *head, t_token *env)
 {
-	int			i;
-	t_family	*tmp;
+	int i;
+	t_family *tmp;
 
 	i = 0;
 	tmp = head->next;
@@ -323,9 +362,9 @@ void	execution(t_family *head, t_token *env)
 	if (i == 1)
 	{
 		single_command(tmp, env, -1, 0);
-		return ;
+		return;
 	}
-	handle_heredocs(tmp,env);
+	handle_heredocs(tmp, env);
 	handle_pipes(head, env);
 	// fork_id = fork();
 	// if (fork_id == -1)
