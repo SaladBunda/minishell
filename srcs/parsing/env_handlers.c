@@ -6,13 +6,13 @@
 /*   By: ael-maaz <ael-maaz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/02 15:17:10 by nhayoun           #+#    #+#             */
-/*   Updated: 2024/07/29 10:23:21 by ael-maaz         ###   ########.fr       */
+/*   Updated: 2024/08/05 19:42:52 by ael-maaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-extern int g_last_exit_status;
+extern int	g_last_exit_status;
 
 int	delete_var(t_token *env_head, char *unset_var)
 {
@@ -20,7 +20,9 @@ int	delete_var(t_token *env_head, char *unset_var)
 	char	**current_var;
 
 	if (unset_var[0] != '_' && !ft_isalpha(unset_var[0]))
-		return (write(2,"unset: ",8),write(2, unset_var,ft_strlen(unset_var)),write(2,": invalid parameter name\n",26),0);
+		return (write(2, "unset: ", 8), write(2, unset_var,
+				ft_strlen(unset_var)), write(2, ": invalid parameter name\n",
+				26), 0);
 	matched = env_head->next;
 	while (matched && matched->value)
 	{
@@ -31,9 +33,7 @@ int	delete_var(t_token *env_head, char *unset_var)
 			matched->prev->next = matched->next;
 			matched->prev = NULL;
 			matched->next = NULL;
-			free(matched->value);
-			free_darr(current_var);
-			free(matched);
+			(free(matched->value), free_darr(current_var), free(matched));
 			return (1);
 		}
 		free_darr(current_var);
@@ -60,9 +60,7 @@ int	env_overwrite(t_token *env_tail, char *export_var)
 		{
 			to_free = current_env->value;
 			current_env->value = ft_strdup(export_var);
-			free(to_free);
-			free_darr(var_value);
-			free_darr(export_var_value);
+			(free(to_free), free_darr(var_value), free_darr(export_var_value));
 			return (1);
 		}
 		free_darr(var_value);
@@ -72,90 +70,65 @@ int	env_overwrite(t_token *env_tail, char *export_var)
 	return (0);
 }
 
+t_token	*var_exist(t_token *head, char *export_var)
+{
+	t_token	*ittr;
+	char	**vars;
+
+	vars = NULL;
+	ittr = head->next;
+	while (ittr->type != E_CMD)
+	{
+		vars = ft_split(ittr->value, '=');
+		if (!ft_fcmp(vars[0], export_var))
+		{
+			free_darr(vars);
+			return (ittr);
+		}
+		free_darr(vars);
+		vars = NULL;
+		ittr = ittr->next;
+	}
+	return (NULL);
+}
+
+int	_var_export(t_token *new_var, t_token *env_tail, char *export_var)
+{
+	if (env_overwrite(env_tail, export_var))
+		return (1);
+	else
+	{
+		new_var = new_token(ft_strdup(export_var), ENV);
+		append_token(env_tail, new_var);
+	}
+	return (0);
+}
+
 int	append_var(t_token *env_head, t_token *env_tail, char *export_var)
 {
 	t_token	*new_var;
+	t_token	*matched;
 
 	new_var = NULL;
-	(void)env_head;
 	if ((!ft_isalpha(export_var[0]) && export_var[0] != '_'))
-		return (printf("export: %s: not a valid identifier\n", export_var),g_last_exit_status = 1, 0);
+		return (printf("export: %s: not a valid identifier\n", export_var),
+			g_last_exit_status = 1, 1);
 	if (ft_strchr(export_var, '='))
 	{
 		if (env_overwrite(env_tail, export_var))
-			return (1);
+			return (0);
 		new_var = new_token(ft_strdup(export_var), ENV);
 		append_token(env_tail, new_var);
-		return (1);
+		return (0);
 	}
 	else
 	{
-		if (env_overwrite(env_tail, export_var))
-			return (1);
-		else
-		{
-			new_var = new_token(ft_strdup(export_var), ENV);
-			append_token(env_tail, new_var);
-		}
+		matched = var_exist(env_head, export_var);
+		if (matched && !ft_strchr(export_var, '=') && ft_strchr(matched->value,
+				'='))
+			return (0);
+		if (_var_export(new_var, env_tail, export_var))
+			return (0);
 	}
 	return (1);
-}
-
-t_token	*env_process(char **env, int flag)
-{
-	t_token	*tail;
-	t_token	*head;
-	t_token	*token;
-	int		i;
-
-	i = -1;
-	tail = create_list();
-	head = tail->prev;
-	while (env[++i])
-	{
-		token = new_token(ft_strdup(env[i]), ENV);
-		//! protect malloc failure plz
-		append_token(tail, token);
-	}
-	if (flag)
-		free_darr(env);
-	return (head);
-}
-
-int	env_size(t_token *env_head)
-{
-	int		i;
-	t_token	*node;
-
-	i = 0;
-	node = env_head->next;
-	while (node->type != E_CMD)
-	{
-		node = node->next;
-		i++;
-	}
-	return (i);
-}
-
-/* Turns linked list into a 2d arr */
-char	**env_decompose(t_token *env_head)
-{
-	int		i;
-	int		ll_size;
-	char	**envp;
-	t_token	*env_node;
-
-	envp = NULL;
-	ll_size = env_size(env_head);
-	i = 0;
-	envp = (char **)malloc(sizeof(char *) * (ll_size + 1));
-	env_node = env_head->next;
-	while (env_node->type != E_CMD)
-	{
-		envp[i] = ft_strdup(env_node->value);
-		env_node = env_node->next;
-		i++;
-	}
-	envp[i] = NULL;
-	return (envp);
 }

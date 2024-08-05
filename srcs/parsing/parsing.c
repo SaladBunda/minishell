@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-maaz <ael-maaz@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: nhayoun <nhayoun@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 20:32:27 by nhayoun           #+#    #+#             */
-/*   Updated: 2024/07/28 18:50:27 by ael-maaz         ###   ########.fr       */
+/*   Updated: 2024/08/04 16:07:01 by nhayoun          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void	handle_state(int state, char *cmd, int *index, t_token *list_tail)
 		token = q_handler(cmd, index, cmd[*index]);
 	else if (state == STR || state == VAR)
 		token = words_handler(cmd, index, state);
-	else if (state == WILD || state == SPACE)
+	else if (state == WILD || state == SPC)
 		token = wide_handlers(cmd, index, cmd[*index]);
 	append_token(list_tail, token);
 }
@@ -40,7 +40,7 @@ void	lexer2(char *cmd, int *state, int *i)
 	else if (cmd[*i] == ')')
 		*state = RIGHT_PAR;
 	else if (is_whitespace(cmd[*i]))
-		*state = SPACE;
+		*state = SPC;
 	else if (cmd[*i] == '*')
 		*state = WILD;
 	else if (cmd[*i] == '$')
@@ -87,23 +87,9 @@ void	free_family(t_family *head)
 	{
 		tmp = head;
 		head = head->next;
-		// free(tmp->value);
 		free(tmp);
 	}
 }
-
-// void	free_list(t_token *head)
-// {
-// 	t_token	*tmp;
-
-// 	while (head != NULL)
-// 	{
-// 		tmp = head;
-// 		head = head->next;
-// 		free(tmp->value);
-// 		free(tmp);
-// 	}
-// }
 
 t_family	*parsing(char *cmd, t_token *env)
 {
@@ -120,20 +106,16 @@ t_family	*parsing(char *cmd, t_token *env)
 	if (!tail)
 		return (NULL);
 	if (!brackets(cmd) || quotes(cmd))
-		return (free_list(head,0), NULL);
+		return (free_list(head, 0), NULL);
 	lexer(cmd, tail, &i);
 	joiner(head, env);
 	if (syntactic_tester(head) == 1)
-		return (free_list(head,0), NULL);
+		return (free_list(head, 0), NULL);
 	family_head = create_family_ll(head);
-	organizer(family_head);
-	// fake_executionner(family_head, env);
+	i = 0;
+	organizer(family_head->next, NULL, 0);
 	extract_paths(family_head, env);
 	extract_files(family_head);
-	// print_tokens(head);
-	// print_family(family_head);
-	// free_list(head);
-	// free_family(family_head);
 	return (family_head);
 }
 

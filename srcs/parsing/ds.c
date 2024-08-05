@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ds.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-maaz <ael-maaz@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: nhayoun <nhayoun@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 13:18:32 by nhayoun           #+#    #+#             */
-/*   Updated: 2024/07/26 17:57:35 by ael-maaz         ###   ########.fr       */
+/*   Updated: 2024/08/04 11:05:27 by nhayoun          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,6 @@ t_token	*create_list(void)
 	tail = new_token(NULL, E_CMD);
 	head->next = tail;
 	tail->prev = head;
-
 	return (tail);
 }
 
@@ -56,23 +55,6 @@ void	append_token(t_token *tail, t_token *token)
 	tail->prev = token;
 }
 
-void	print_tokens(t_token *head)
-{
-	t_token	*node;
-	int		i;
-
-	node = head->next;
-	i = 0;
-	while (node)
-	{
-		printf("#:%d of type %d with value: -%s- and group: %d\n", i, node->type, node->value, node->group);
-		printf("-----------\n");
-		node = node->next;
-		i++;
-	}
-	printf("\n\n");
-}
-
 t_token	*list_tail(t_token *node)
 {
 	t_token	*tmp;
@@ -82,3 +64,21 @@ t_token	*list_tail(t_token *node)
 		tmp = tmp->next;
 	return (tmp);
 }
+
+/* void	print_tokens(t_token *head)
+{
+	t_token	*node;
+	int		i;
+
+	node = head->next;
+	i = 0;
+	while (node)
+	{
+		printf("#:%d of type %d with value: -%s- and group: %d\n", i,
+			node->type, node->value, node->group);
+		printf("-----------\n");
+		node = node->next;
+		i++;
+	}
+	printf("\n\n");
+}*/

@@ -6,7 +6,7 @@
 /*   By: nhayoun <nhayoun@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/04 17:06:07 by nhayoun           #+#    #+#             */
-/*   Updated: 2024/07/13 19:09:33 by nhayoun          ###   ########.fr       */
+/*   Updated: 2024/08/04 20:12:24 by nhayoun          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 42
 # endif
-
 
 char	*ft_strdup_gnl(const char *s1);
 
@@ -42,6 +41,8 @@ int		ft_isprint(int c);
 int		ft_isalnum(int c);
 
 int		ft_isalpha(int c);
+
+long	ft_atol(const char *str);
 
 size_t	ft_strlen(const char *s);
 

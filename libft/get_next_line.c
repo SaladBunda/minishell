@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-maaz <ael-maaz@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: nhayoun <nhayoun@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/14 15:08:00 by nhayoun           #+#    #+#             */
-/*   Updated: 2024/07/16 16:36:35 by ael-maaz         ###   ########.fr       */
+/*   Updated: 2024/08/04 20:12:55 by nhayoun          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ char	*read_and_stash(char *stash, int fd)
 	br = 1;
 	while (br > 0)
 	{
-		write(0, ">",1);
+		write(0, ">", 1);
 		br = read(fd, buffer, 20);
 		if (br == -1)
 		{
@@ -65,7 +65,6 @@ char	*update_stash(char *stash)
 {
 	char	*newline_ptr;
 	char	*new_stash;
-	int		len;
 
 	if (!stash)
 		return (NULL);
@@ -75,7 +74,6 @@ char	*update_stash(char *stash)
 		free(stash);
 		return (NULL);
 	}
-	len = newline_ptr - stash;
 	new_stash = ft_strdup_gnl(newline_ptr + 1);
 	free(stash);
 	return (new_stash);
@@ -87,7 +85,7 @@ char	*get_next_line(int fd)
 	char		*line;
 
 	line = NULL;
-	if (/* BUFFER_SIZE <= 0 || */ fd < 0)
+	if (fd < 0)
 		return (NULL);
 	stash = read_and_stash(stash, fd);
 	if (stash == NULL)

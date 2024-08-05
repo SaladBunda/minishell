@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   subst_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-maaz <ael-maaz@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: nhayoun <nhayoun@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 09:42:30 by ael-maaz          #+#    #+#             */
-/*   Updated: 2024/07/28 12:14:55 by ael-maaz         ###   ########.fr       */
+/*   Updated: 2024/08/04 10:27:20 by nhayoun          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,9 @@
 
 void	var_name(char *cmd, int *index, int state)
 {
-	int		i;
-	t_token	*token;
-
 	(void)state;
-	i = *index;
-	token = NULL;
 	(*index)++;
-	while (cmd[*index] && cmd[*index] != '/' && is_special(cmd[*index]) == 0)
+	while (cmd[*index] && cmd[*index] != '/' && is_special(cmd[*index], 1) == 0)
 		(*index)++;
 	(*index)--;
 }
@@ -117,5 +112,5 @@ char	*substitution2(int *i, int *j, char *var, char *string)
 	*i = l - 1;
 	while (l < new_len)
 		str[l++] = string[n++];
-	return (str[l] = '\0',str);
+	return (str[l] = '\0', str);
 }

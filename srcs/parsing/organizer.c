@@ -3,57 +3,39 @@
 /*                                                        :::      ::::::::   */
 /*   organizer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-maaz <ael-maaz@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: nhayoun <nhayoun@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/08 11:15:52 by ael-maaz          #+#    #+#             */
-/*   Updated: 2024/07/29 12:28:42 by ael-maaz         ###   ########.fr       */
+/*   Updated: 2024/08/04 20:02:24 by nhayoun          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-static int	is_operator(t_token *t)
+void	assign_token(t_token **token, t_family *group, int *flag)
 {
-	if (t->type == GREAT || t->type == LESS || t->type == APPEND || t->type == HEREDOC)
-		return (1);
-	return (0);
+	*flag = 0;
+	*token = group->start;
 }
 
- int	is_string(t_token *t)
+void	organizer(t_family *tmp, t_token *tmp2, int flag)
 {
-	if (t->type == VAR || t->type == DQUOTE || t->type == SQUOTE
-		|| t->type == STR)
-		return (1);
-	return (0);
-}
-
-void	organizer(t_family *family)
-{
-	t_family	*tmp;
-	t_token		*tmp2;
-	int			flag;
-
-	flag = 0;
-	tmp = family->next;
 	while (tmp->type != E_CMD)
 	{
-		flag = 0;
-		tmp2 = tmp->start;
+		assign_token(&tmp2, tmp, &flag);
 		while (tmp2 != tmp->end->next)
 		{
-			if (flag == 0 && is_string(tmp2) == 1)
-			{
-				tmp2->group = COMMAND;
-				flag++;
-			}
+			if (!flag && is_str(tmp2) && (tmp2->type != VAR
+					|| (tmp2->type == VAR && !is_empty(tmp2))))
+				(_edit(&tmp2->group, COMMAND), flag++);
 			else
 				tmp2->group = PARAM;
-			if ((is_operator(tmp2) == 1))
+			if ((is_op(tmp2) == 1))
 			{
 				tmp2->group = OP;
-				if (tmp2->next != tmp->end->next && tmp2->next->type == SPACE)
+				if (tmp2->next != tmp->end->next && tmp2->next->type == SPC)
 					tmp2 = tmp2->next;
-				if (tmp2->next != tmp->end->next && is_string(tmp2->next) == 1)
+				if (tmp2->next != tmp->end->next && is_str(tmp2->next) == 1)
 				{
 					tmp2->next->group = FILE_NAME;
 					tmp2 = tmp2->next;
@@ -85,7 +67,7 @@ void	omit_spaces(t_token *head)
 	ittr = head->next;
 	while (ittr->type != E_CMD)
 	{
-		if (ittr->type == SPACE)
+		if (ittr->type == SPC)
 			ittr = remove_space(ittr);
 		else
 			ittr = ittr->next;

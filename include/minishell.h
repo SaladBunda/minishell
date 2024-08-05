@@ -3,25 +3,36 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-maaz <ael-maaz@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: nhayoun <nhayoun@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 20:33:02 by nhayoun           #+#    #+#             */
-/*   Updated: 2024/07/29 16:15:38 by ael-maaz         ###   ########.fr       */
+/*   Updated: 2024/08/05 18:24:25 by nhayoun          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 # include "../libft/libft.h"
+# include <dirent.h>
+# include <errno.h>
 # include <fcntl.h>
-# include <readline/history.h>
-# include <readline/readline.h>
+# include <limits.h>
+
 # include <signal.h>
 # include <stdio.h>
 # include <stdlib.h>
+# include <sys/stat.h>
+# include <sys/types.h>
+# include <sys/wait.h>
 # include <unistd.h>
-# include <limits.h>
-# include <dirent.h>
+# include "./readline/history.h"
+# include "./readline/readline.h"
+
+# define ED _edit
+
+# ifndef ARG_MAX
+#  define ARG_MAX (256 * 1024)
+# endif
 
 # define CMD_ROW 100
 # define AND_ROW 200
@@ -30,7 +41,7 @@
 # define RIGHT_ROW 500
 # define PIPE_ROW 600
 
-/*Commands codes*/
+/* Commands codes */
 # define FILE_NAME 101
 # define COMMAND 102
 # define PARAM 103
@@ -51,7 +62,7 @@
 # define ENV 0
 # define S_CMD 1
 # define E_CMD 5
-# define SPACE 7
+# define SPC 7
 # define PIPE 11
 # define SQUOTE 13
 # define DQUOTE 17
@@ -66,6 +77,15 @@ typedef struct s_token		t_token;
 typedef struct s_command	t_command;
 typedef struct s_family		t_family;
 typedef struct s_tree		t_tree;
+typedef struct s_utils		t_utils;
+
+typedef struct s_utils
+{
+	int						fds[2];
+	int						saved;
+	int						i;
+	int						pipes;
+}							t_utils;
 
 typedef struct s_command
 {
@@ -107,8 +127,8 @@ typedef struct s_family
 	int						index;
 	char					**args;
 	char					*cmd_path;
-	char					*last_infile;
-	char					*last_outfile;
+	char					*last_in;
+	char					*last_out;
 }							t_family;
 
 typedef struct s_token
@@ -152,15 +172,15 @@ int							is_whitespace(int c);
 int							is_special_var(char c);
 int							brackets(char *cmd);
 int							quotes(char *cmd);
-int							is_special(char c);
+int							is_special(char c, int flag);
 void						bracket_util(char *str, int i, int j, int *opened);
 
 /* Free Functions */
-void						free_token(t_token *token);
-void						free_darr(char **arr);
-void						free_all_family(t_family *head);
-void						free_list2(t_token *head);
-void						free_list(t_token *head, int flag);
+// void						free_token(t_token *token);
+// void						free_darr(char **arr);
+// void						free_all_family(t_family *head);
+// void						free_list2(t_token *head);
+// void						free_list(t_token *head, int flag);
 
 /* env functions */
 int							append_var(t_token *env_head, t_token *env_tail,
@@ -170,13 +190,16 @@ t_token						*env_process(char **env, int flag);
 void						joiner(t_token *head, t_token *env);
 char						*get_var_value(char *str);
 char						**env_decompose(t_token *env_head);
+t_token						*env_process(char **env, int flag);
+int							env_size(t_token *env_head);
 
 // substitution functions
 char						*search_replace(char *str, int start, int end,
 								t_token *env);
 char						*substitution(int *i, int *j, char *var,
 								t_token *token);
-char	*substitution2(int *i, int *j, char *var, char *string);
+char						*substitution2(int *i, int *j, char *var,
+								char *string);
 void						var_name(char *cmd, int *index, int state);
 
 // family functions
@@ -195,20 +218,26 @@ t_family					*smallest_level(t_family *family_ll);
 /*Built-In*/
 void						echo_builtin(t_family *cmd_row);
 void						pwd_builtin(void);
-void						cd_builtin(t_family *token, t_token *env, int flag);
-int							variables_handler(t_token *env_list,
+char						*get_var_name(char *str);
+void						exit_builtin(t_family *family);
+void						cd_builtin(t_family *token, t_token *env);
+int							variables_handler(t_token *cmd, t_token *env_list,
 								t_family *cmd_family);
+char						*pwd_extract(void);
 
 // executionner function
-int							fake_executionner(t_family *family, t_token *env, int flag);
+int							fake_ex(t_family *family, t_token *env);
 int							handle_fds(t_family *head);
-void						handle_pipes(t_family *cmd_row, t_token *env);
+int							handle_pipes(t_family *cmd_row, t_token *env,
+								int status, t_utils v);
 
 void						print_env(t_token *env_head);
 
+void						handle_errors(t_family *cmd);
+
 // Syntatic Functions
 int							syntactic_tester(t_token *head);
-void						organizer(t_family *family);
+void						organizer(t_family *tmp, t_token *tmp2, int flag);
 void						omit_spaces(t_token *head);
 
 // bunda test
@@ -221,16 +250,57 @@ void						print_2d(char **strs);
 void						extract_paths(t_family *head, t_token *env);
 t_token						*space_free(t_token *list);
 
-void						print_args(t_family *head);
-
 void						signal_handler(void);
 
 void						sigquit_reset(int sig);
-void						signals_init(void);
+void						signals_init(int flag);
 void						here_sig(int sig);
 
-//wildcards
-void wildcard_sub(t_token *head, t_token *env);
-int	is_string(t_token *t);
+/* norme function*/
+void						edit_global(int status);
+void						_edit(int *var, int value);
+int							nof_pipes(t_family *head);
+void						close_fds(int *fds);
+void						save_pipe(int *prev_fd, int *fds);
+int							handle_heredocs(t_family *head, t_token *env);
+void						get_io_single(t_family *cmd_row);
+void						heredoc_sigg(int sig);
+
+/* Paths */
+void						extract_paths(t_family *head, t_token *env);
+char						*ft_strjoin_cmd(char const *s1, char const *s2);
+int							count_args(t_token *start, t_token *end);
+int							is_empty(t_token *token);
+
+/* Joiner */
+void						token_merger(t_token *head);
+
+/* Frees */
+void						free_all_family(t_family *head);
+void						free_list(t_token *head, int flag);
+void						free_list2(t_token *head);
+void						free_token(t_token *token);
+void						free_token2(t_token *token);
+void						free_family_node(t_family *node);
+void						free_files(t_family *node);
+void						free_darr(char **arr);
+
+/*Redirs*/
+int							count_files(t_family *head);
+
+/* Organizer Utils */
+int							is_op(t_token *t);
+int							is_str(t_token *t);
+
+/* exit utils */
+int							is_numeric(char *str);
+int							all_numeric(char **args);
+int							in_range(char *str, unsigned long number, int sign,
+								int i);
+
+// wildcards
+void						wildcard_sub(t_token *head, t_token *env);
+int							is_string(t_token *t);
+t_token *basic_env(t_token *tail, t_token *head, t_token *token);
 
 #endif

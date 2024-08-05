@@ -65,9 +65,7 @@ int	modify(char *str)
 int	brackets(char *cmd)
 {
 	char	*copy;
-	int		i;
 
-	i = 0;
 	copy = ft_strdup(cmd);
 	while (contains_brackets(copy))
 	{

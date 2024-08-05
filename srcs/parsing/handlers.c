@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handlers.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-maaz <ael-maaz@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: nhayoun <nhayoun@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/29 16:21:57 by nhayoun           #+#    #+#             */
-/*   Updated: 2024/07/23 10:41:10 by ael-maaz         ###   ########.fr       */
+/*   Updated: 2024/08/03 16:07:23 by nhayoun          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,7 @@ t_token	*wide_handlers(char *cmd, int *index, char c)
 	while (cmd[*index] == c)
 		(*index)++;
 	if (c == ' ')
-		token = new_token(ft_strdup(" "), SPACE);
+		token = new_token(ft_strdup(" "), SPC);
 	else if (c == '*')
 		token = new_token(ft_strdup("*"), WILD);
 	(*index)--;
@@ -121,17 +121,17 @@ t_token	*words_handler(char *cmd, int *index, int state)
 	if (state == VAR)
 	{
 		(*index)++;
-		while (cmd[*index] && is_special_var(cmd[*index]) == 0)
+		while (cmd[*index] && is_special(cmd[*index], 0) == 0)
 			(*index)++;
-		if(cmd[*index] && cmd[*index] == '?')
+		if (cmd[*index] && cmd[*index] == '?')
 			(*index)++;
 		str = ft_substr(cmd, i, (*index) - i);
 	}
 	else
 	{
-		while (cmd[*index] && is_special(cmd[*index]) == 0)
+		while (cmd[*index] && is_special(cmd[*index], 1) == 0)
 			(*index)++;
-		str = ft_substr(cmd, i, (*index) - i);	
+		str = ft_substr(cmd, i, (*index) - i);
 	}
 	(*index)--;
 	token = new_token(str, state);

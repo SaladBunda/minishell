@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-maaz <ael-maaz@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: nhayoun <nhayoun@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/02 10:05:46 by nhayoun           #+#    #+#             */
-/*   Updated: 2024/07/23 11:12:28 by ael-maaz         ###   ########.fr       */
+/*   Updated: 2024/08/03 16:07:03 by nhayoun          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-extern int g_last_exit_status;
+extern int	g_last_exit_status;
 
 int	is_whitespace(int c)
 {
@@ -21,12 +21,15 @@ int	is_whitespace(int c)
 	return (0);
 }
 
-int	is_special(char c)
+int	is_special(char c, int flag)
 {
 	int		i;
 	char	*symbols;
 
-	symbols = "\"\'|< &$()>*\t\n\r\v\f";
+	if (flag)
+		symbols = "\"\'|< &$()>*\t\n\r\v\f";
+	else
+		symbols = "\"\'-?|@< &$()>*\t\n\r\v\f";
 	i = 0;
 	while (symbols[i])
 	{
@@ -64,7 +67,7 @@ int	quotes(char *cmd)
 			quo(cmd, &i, &check, '\"');
 	}
 	if (check == 1)
-		return (g_last_exit_status = 3,write(2,"unclosed quote\n",15), 1);
+		return (g_last_exit_status = 3, write(2, "unclosed quote\n", 15), 1);
 	return (0);
 }
 
